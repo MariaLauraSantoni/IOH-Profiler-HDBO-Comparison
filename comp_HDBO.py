@@ -4,6 +4,7 @@
 from ioh import get_problem, logger
 import numpy as np
 
+
 # Set solver
 # Alternatives: "saasbo", "BO_sklearn", "BO_bayesoptim", "random", "RPA_BO", "linearPCABO"
 solver = "linearPCABO"
@@ -74,6 +75,50 @@ if __name__ == "__main__":
                     n_random_starts=DoE_samples,  # the number of random initialization points
                     noise=0.1 ** 2,  # the noise level (optional)
                     random_state=1234)
+    elif solver == "BO_bayesoptim":
+        # packages for BO_bayesoptim
+        from bayes_optim import BO, RealSpace
+        from bayes_optim.surrogate import GaussianProcess
+
+        space = RealSpace([lb, ub]) * dim  # create the search space
+
+        # hyperparameters of the GPR model
+        thetaL = 1e-10 * (ub - lb) * np.ones(dim)
+        thetaU = 10 * (ub - lb) * np.ones(dim)
+        model = GaussianProcess(  # create the GPR model
+            thetaL=thetaL, thetaU=thetaU
+        )
+
+        opt = BO(
+            search_space=space,
+            obj_fun=f,
+            model=model,
+            DoE_size=DoE_samples,  # number of initial sample points
+            max_FEs=budget,  # maximal function evaluation
+            verbose=True
+        )
+        opt.run()
+    elif solver == "random":
+        # packages for random
+        import ioh
+        def random_search(problem: ioh.problem.Real, seed: int = 42, budget: int = None) -> ioh.RealSolution:
+            np.random.seed(seed)
+
+            if budget is None:
+                budget = int(problem.meta_data.n_variables * 1e4)
+
+            for _ in range(budget):
+                x = np.random.uniform(problem.constraint.lb, problem.constraint.ub)
+
+                # problem automatically tracks the current best search point
+                f = problem(x)
+
+            return problem.state.current_best
+
+
+        random_search(f, 42, budget)
+
+
     elif solver == "linearPCABO":
         # packages for linearPCABO
         sys.path.insert(0, "./mylib/lib_linearPCABO/Bayesian-Optimization")
