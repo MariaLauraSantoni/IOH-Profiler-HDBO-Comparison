@@ -22,7 +22,7 @@ print(sys.path)
 dim = 10
 ub = 5
 lb = -5
-budget=10
+budget=20
 #budget= 10 * dim + 50
 DoE_samples = int(.20 * budget)
 
@@ -129,8 +129,8 @@ if __name__ == "__main__":
         opt = PCABO(
             search_space=space,
             obj_fun=f,
-            DoE_size=3, # DoE_samples,
-            max_FEs=10, # 10 * dim + 50,
+            DoE_size= DoE_samples,
+            max_FEs=budget, # 10 * dim + 50,
             verbose=True,
             n_point=1,
             n_components=0.95,
