@@ -1,0 +1,3 @@
+"function evaluation" "current f(x)" "best-so-far f(x)" "current af(x)+b" "best af(x)+b"
+23 71.453019 71.453019 112.233019 112.233019
+30 82.533904 71.453019 123.313904 112.233019

@@ -3,8 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="37fd092e-61cd-446d-88a1-13ac6315f0b9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/comp_HDBO.py" beforeDir="false" afterPath="$PROJECT_DIR$/comp_HDBO.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/runIOHanalyzer1.zip" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
