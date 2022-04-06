@@ -157,6 +157,81 @@ class linearPCABOWrapper:
         )
         print(opt.run())
 
+class turbo1Wrapper:
+    def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
+        import sys
+        sys.path.append('./mylib/' + 'lib_' + "turbo1")
+        print(sys.path)
+
+        self.func = func
+        self.dim = dim
+        self.ub = ub
+        self.lb = lb
+        self.total_budget = total_budget
+        self.Doe_size = DoE_size
+        self.random_seed = random_seed
+
+    def run(self):
+        from turbo import Turbo1
+        import torch
+        import math
+        import matplotlib
+        import matplotlib.pyplot as plt
+        turbo1 = Turbo1(
+            f=self.func,  # Handle to objective function
+            lb=np.ones(dim) * self.lb,  # Numpy array specifying lower bounds
+            ub=np.ones(dim) * self.ub,  # Numpy array specifying upper bounds
+            n_init=self.Doe_size,  # Number of initial bounds from an Latin hypercube design
+            max_evals=self.total_budget,  # Maximum number of evaluations
+            batch_size=5,  # How large batch size TuRBO uses
+            verbose=True,  # Print information from each batch
+            use_ard=True,  # Set to true if you want to use ARD for the GP kernel
+            max_cholesky_size=2000,  # When we switch from Cholesky to Lanczos
+            n_training_steps=50,  # Number of steps of ADAM to learn the hypers
+            min_cuda=1024,  # Run on the CPU for small datasets
+            device="cpu",  # "cpu" or "cuda"
+            dtype="float64",  # float64 or float32
+        )
+        turbo1.optimize()
+class turbomWrapper:
+    def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
+        import sys
+        sys.path.append('./mylib/' + 'lib_' + "turbom")
+        print(sys.path)
+
+        self.func = func
+        self.dim = dim
+        self.ub = ub
+        self.lb = lb
+        self.total_budget = total_budget
+        self.Doe_size = DoE_size
+        self.random_seed = random_seed
+
+    def run(self):
+        from turbo import TurboM
+        import torch
+        import math
+        import matplotlib
+        import matplotlib.pyplot as plt
+        tr = math.floor(self.total_budget / self.Doe_size) - 1
+
+        turbo_m = TurboM(
+            f=self.func,  # Handle to objective function
+            lb=np.ones(dim) * self.lb,  # Numpy array specifying lower bounds
+            ub=np.ones(dim) * self.ub,  # Numpy array specifying upper bounds
+            n_init=self.Doe_size,  # Number of initial bounds from an Symmetric Latin hypercube design
+            max_evals=self.total_budget,  # Maximum number of evaluations
+            n_trust_regions=tr,  # Number of trust regions
+            batch_size=5,  # How large batch size TuRBO uses
+            verbose=True,  # Print information from each batch
+            use_ard=True,  # Set to true if you want to use ARD for the GP kernel
+            max_cholesky_size=2000,  # When we switch from Cholesky to Lanczos
+            n_training_steps=50,  # Number of steps of ADAM to learn the hypers
+            min_cuda=1024,  # Run on the CPU for small datasets
+            device="cpu",  # "cpu" or "cuda"
+            dtype="float64",  # float64 or float32
+        )
+        turbo_m.optimize()
 
 
 def marialaura(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_seed):
@@ -182,6 +257,12 @@ def marialaura(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, rando
         solver = randomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                                random_seed=random_seed)
         solver.run()
+    if optimizer_name == "turbo1":
+        solver = turbomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+                               random_seed=random_seed)
+    if optimizer_name == "turbom":
+        solver = turbomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+                               random_seed=random_seed)
 
 
 if __name__ == "__main__":
@@ -190,7 +271,7 @@ if __name__ == "__main__":
     doe_size = 5
     seed = 0
     # Algorithm alternatives:
-    algorithm_name = "linearPCABO"
+    algorithm_name = "turbo1"
 
     f = get_problem(21, dimension=dim, instance=1, problem_type='Real')
 

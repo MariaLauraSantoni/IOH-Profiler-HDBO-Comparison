@@ -6,11 +6,11 @@ import numpy as np
 
 
 # Set solver
-# Alternatives: "saasbo", "BO_sklearn", "BO_bayesoptim", "random", "RPA_BO", "linearPCABO"
+# Alternatives: "saasbo", "BO_sklearn", "BO_bayesoptim", "random", "linearPCABO", "turbo1", "turbom"
 
 
-alternatives = [ "saasbo", "BO_sklearn", "BO_bayesoptim", "random", "linearPCABO" ]
-#alternatives = ["random", "linearPCABO", "BO_sklearn"]
+#alternatives = [ "saasbo", "BO_sklearn", "BO_bayesoptim", "random", "linearPCABO" ]
+alternatives = ["SMAC3"]
 
 
 
@@ -145,5 +145,98 @@ for item in alternatives :
                 acquisition_optimization={"optimizer": "BFGS"},
             )
             print(opt.run())
+
+        elif solver == "turbo1":
+            from turbo import Turbo1
+            import torch
+            import math
+            import matplotlib
+            import matplotlib.pyplot as plt
+
+            turbo1 = Turbo1(
+                f=f,  # Handle to objective function
+                lb=np.ones(dim)*lb,  # Numpy array specifying lower bounds
+                ub=np.ones(dim)*ub,  # Numpy array specifying upper bounds
+                n_init=DoE_samples,  # Number of initial bounds from an Latin hypercube design
+                max_evals=budget,  # Maximum number of evaluations
+                batch_size=5,  # How large batch size TuRBO uses
+                verbose=True,  # Print information from each batch
+                use_ard=True,  # Set to true if you want to use ARD for the GP kernel
+                max_cholesky_size=2000,  # When we switch from Cholesky to Lanczos
+                n_training_steps=50,  # Number of steps of ADAM to learn the hypers
+                min_cuda=1024,  # Run on the CPU for small datasets
+                device="cpu",  # "cpu" or "cuda"
+                dtype="float64",  # float64 or float32
+            )
+            turbo1.optimize()
+
+        elif solver == "turbom":
+            from turbo import TurboM
+            import torch
+            import math
+            import matplotlib
+            import matplotlib.pyplot as plt
+            tr = math.floor(budget/DoE_samples) -1
+
+            turbo_m = TurboM(
+                f=f,  # Handle to objective function
+                lb=np.ones(dim)*lb,  # Numpy array specifying lower bounds
+                ub=np.ones(dim)*ub,  # Numpy array specifying upper bounds
+                n_init=DoE_samples,  # Number of initial bounds from an Symmetric Latin hypercube design
+                max_evals=budget,  # Maximum number of evaluations
+                n_trust_regions=tr,  # Number of trust regions
+                batch_size=5,  # How large batch size TuRBO uses
+                verbose=True,  # Print information from each batch
+                use_ard=True,  # Set to true if you want to use ARD for the GP kernel
+                max_cholesky_size=2000,  # When we switch from Cholesky to Lanczos
+                n_training_steps=50,  # Number of steps of ADAM to learn the hypers
+                min_cuda=1024,  # Run on the CPU for small datasets
+                device="cpu",  # "cpu" or "cuda"
+                dtype="float64",  # float64 or float32
+            )
+            turbo_m.optimize()
+        elif solver == "SMAC3":
+            from ConfigSpace.hyperparameters import UniformFloatHyperparameter
+
+            # Import ConfigSpace and different types of parameters
+            from smac.configspace import ConfigurationSpace
+            from smac.facade.smac_bb_facade import SMAC4BB
+            from smac.optimizer.acquisition import EI
+
+            # Import SMAC-utilities
+            from smac.scenario.scenario import Scenario
+
+            # Build Configuration Space which defines all parameters and their ranges
+            cs = ConfigurationSpace()
+            x0 = UniformFloatHyperparameter("x0", -5, 10, default_value=-3)
+            x1 = UniformFloatHyperparameter("x1", -5, 10, default_value=-4)
+            cs.add_hyperparameters([x0, x1])
+
+            # Scenario object
+            scenario = Scenario({"run_obj": "quality",  # we optimize quality (alternatively runtime)
+                                 "runcount-limit": budget,  # max. number of function evaluations
+                                 "cs": cs,  # configuration space
+                                 "deterministic": True
+                                 })
+
+            # Use 'gp' or 'gp_mcmc' here
+            model_type = 'gp'
+
+            import smac  # noqa  # pylint: disable=unused-importa
+            import scipy.optimize  # noqa  # pylint: disable=unused-importa
+            from smac.facade.func_facade import fmin_smac  # noqa  # pylint: disable=unused-import
+
+            x, cost, _ = fmin_smac(
+                func=f, x0=[0.0] * dim, bounds=[(lb, ub)] * dim, maxfun=budget
+            )  # Passing a seed makes fmin_smac determistic
+
+            smac = SMAC4BB(scenario=scenario,
+                           model_type=model_type,
+                           rng=np.random.RandomState(42),
+                           acquisition_function=EI,  # or others like PI, LCB as acquisition functions
+                           tae_runner=f)
+
+            smac.optimize()
+
 
 
