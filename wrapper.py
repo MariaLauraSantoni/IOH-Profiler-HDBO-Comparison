@@ -1,13 +1,14 @@
 import numpy as np
-
-from ioh import get_problem, logger
+import sys
+import os
+from ioh import get_problem
 
 
 class SaasboWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
-        import sys
-        sys.path.append('./mylib/' + 'lib_' + "saasbo")
-        print(sys.path)
+        import pathlib
+        my_dir = pathlib.Path(__file__).parent.resolve()
+        sys.path.append(os.path.join(my_dir, 'mylib', 'lib_saasbo'))
 
         self.func = func
         self.dim = dim
@@ -19,6 +20,7 @@ class SaasboWrapper:
 
     def run(self):
         from saasbo import run_saasbo
+
         run_saasbo(
             self.func,
             np.ones(self.dim) * self.ub,
@@ -35,7 +37,6 @@ class SaasboWrapper:
 
 class BO_sklearnWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
-        import sys
         sys.path.append('./mylib/' + 'lib_' + "BO_sklearn")
         print(sys.path)
 
@@ -60,7 +61,6 @@ class BO_sklearnWrapper:
 
 class BO_bayesoptimWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
-        import sys
         sys.path.append('./mylib/' + 'lib_' + "BO_bayesoptim")
         print(sys.path)
 
@@ -193,6 +193,8 @@ class turbo1Wrapper:
             dtype="float64",  # float64 or float32
         )
         turbo1.optimize()
+
+
 class turbomWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
         import sys
@@ -238,30 +240,25 @@ def marialaura(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, rando
     ub = +5
     lb = -5
     if optimizer_name == "saasbo":
-        solver = SaasboWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+        return SaasboWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                                random_seed=random_seed)
-        solver.run()
     if optimizer_name == "BO_sklearn":
-        solver = BO_sklearnWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+        return BO_sklearnWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                                random_seed=random_seed)
-        solver.run()
     if optimizer_name == "BO_bayesoptim":
-        solver = BO_bayesoptimWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+        return BO_bayesoptimWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                                random_seed=random_seed)
-        solver.run()
     if optimizer_name == "random":
-        solver = randomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+        return randomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                                random_seed=random_seed)
-        solver.run()
     if optimizer_name == "linearPCABO":
-        solver = randomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+        return randomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                                random_seed=random_seed)
-        solver.run()
     if optimizer_name == "turbo1":
-        solver = turbomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+        return turbomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                                random_seed=random_seed)
     if optimizer_name == "turbom":
-        solver = turbomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+        return turbomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                                random_seed=random_seed)
 
 
@@ -271,8 +268,10 @@ if __name__ == "__main__":
     doe_size = 5
     seed = 0
     # Algorithm alternatives:
-    algorithm_name = "turbo1"
+    algorithm_name = "turbom"
 
     f = get_problem(21, dimension=dim, instance=1, problem_type='Real')
 
-    marialaura(algorithm_name, f, dim, total_budget, doe_size, seed)
+    opt = marialaura(algorithm_name, f, dim, total_budget, doe_size, seed)
+    opt.run()
+
