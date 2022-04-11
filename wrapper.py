@@ -57,7 +57,7 @@ class BO_sklearnWrapper:
                     n_calls=self.total_budget,  # the number of evaluations of f
                     n_random_starts=self.Doe_size,  # the number of random initialization points
                     noise=0.1 ** 2,  # the noise level (optional)
-                    random_state=1234)
+                    random_state=self.random_seed)
 
 class BO_bayesoptimWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
