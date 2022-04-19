@@ -35,6 +35,7 @@ class SaasboWrapper:
             device="cpu",
         )
 
+
 class BO_sklearnWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
         sys.path.append('./mylib/' + 'lib_' + "BO_sklearn")
@@ -52,14 +53,17 @@ class BO_sklearnWrapper:
         from skopt import gp_minimize
 
         gp_minimize(self.func,  # the function to minimize
-                    list((((self.lb, self.ub),) * self.dim)),  # the bounds on each dimension of x
+                    # the bounds on each dimension of x
+                    list((((self.lb, self.ub),) * self.dim)),
                     acq_func="EI",  # the acquisition function
                     n_calls=self.total_budget,  # the number of evaluations of f
                     n_random_starts=self.Doe_size,  # the number of random initialization points
                     noise=0.1 ** 2,  # the noise level (optional)
                     random_state=self.random_seed)
 
+
 class BO_bayesoptimWrapper:
+    # BO of Hao
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
         sys.path.append('./mylib/' + 'lib_' + "BO_bayesoptim")
         print(sys.path)
@@ -76,7 +80,8 @@ class BO_bayesoptimWrapper:
         from bayes_optim import BO, RealSpace
         from bayes_optim.surrogate import GaussianProcess
 
-        space = RealSpace([self.lb, self.ub]) * self.dim  # create the search space
+        space = RealSpace([self.lb, self.ub]) * \
+            self.dim  # create the search space
 
         # hyperparameters of the GPR model
         thetaL = 1e-10 * (self.ub - self.lb) * np.ones(self.dim)
@@ -95,6 +100,44 @@ class BO_bayesoptimWrapper:
         )
         opt.run()
 
+
+class BO_development_bayesoptimWrapper:
+    # Latest changes from Hao's repository
+    def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
+        import pathlib
+        my_dir = pathlib.Path(__file__).parent.resolve()
+        bayes_bo_lib = os.path.join(
+            my_dir, 'mylib', 'lib_BO_bayesoptim', 'Bayesian-Optimization')
+        if not os.path.isdir(bayes_bo_lib):
+            raise ImportError(
+                'No such module Bayesian-Optimization, please consider cloning this repository: https://github.com/wangronin/Bayesian-Optimization to the folder mylib/lib_BO_bayesoptim/')
+        sys.path.append(bayes_bo_lib)
+
+        self.func = func
+        self.dim = dim
+        self.ub = ub
+        self.lb = lb
+        self.total_budget = total_budget
+        self.Doe_size = DoE_size
+        self.random_seed = random_seed
+
+    def run(self):
+        from bayes_optim.extension import RealSpace, BO
+
+        space = RealSpace([self.lb, self.ub], random_seed=self.random_seed) * self.dim
+        opt = BO(
+            search_space=space,
+            obj_fun=self.func,
+            DoE_size=self.Doe_size,
+            n_point=1,
+            random_seed=self.random_seed,
+            acquisition_optimization={"optimizer": "BFGS"},
+            max_FEs=self.total_budget,
+            verbose=False,
+        )
+        opt.run()
+
+
 class randomWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
 
@@ -108,6 +151,7 @@ class randomWrapper:
 
     def run(self):
         import ioh
+
         def random_search(problem: ioh.problem.Real, seed: int = 42, budget: int = None) -> ioh.RealSolution:
             np.random.seed(seed)
 
@@ -115,7 +159,8 @@ class randomWrapper:
                 budget = int(problem.meta_data.n_variables * 1e4)
 
             for _ in range(budget):
-                x = np.random.uniform(problem.constraint.lb, problem.constraint.ub)
+                x = np.random.uniform(
+                    problem.constraint.lb, problem.constraint.ub)
 
                 # problem automatically tracks the current best search point
                 f = problem(x)
@@ -123,6 +168,7 @@ class randomWrapper:
             return problem.state.current_best
 
         random_search(self.func, self.random_seed, self.total_budget)
+
 
 class linearPCABOWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
@@ -156,6 +202,7 @@ class linearPCABOWrapper:
             acquisition_optimization={"optimizer": "BFGS"},
         )
         print(opt.run())
+
 
 class turbo1Wrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
@@ -241,25 +288,28 @@ def marialaura(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, rando
     lb = -5
     if optimizer_name == "saasbo":
         return SaasboWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
-                               random_seed=random_seed)
+                             random_seed=random_seed)
     if optimizer_name == "BO_sklearn":
         return BO_sklearnWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
-                               random_seed=random_seed)
+                                 random_seed=random_seed)
     if optimizer_name == "BO_bayesoptim":
         return BO_bayesoptimWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
-                               random_seed=random_seed)
+                                    random_seed=random_seed)
     if optimizer_name == "random":
         return randomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
-                               random_seed=random_seed)
+                             random_seed=random_seed)
     if optimizer_name == "linearPCABO":
         return randomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
-                               random_seed=random_seed)
+                             random_seed=random_seed)
     if optimizer_name == "turbo1":
         return turbomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
-                               random_seed=random_seed)
+                             random_seed=random_seed)
     if optimizer_name == "turbom":
         return turbomWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
-                               random_seed=random_seed)
+                             random_seed=random_seed)
+    if optimizer_name == 'BO_dev_Hao':
+        return BO_development_bayesoptimWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+                             random_seed=random_seed)
 
 
 if __name__ == "__main__":
@@ -274,4 +324,3 @@ if __name__ == "__main__":
 
     opt = marialaura(algorithm_name, f, dim, total_budget, doe_size, seed)
     opt.run()
-
