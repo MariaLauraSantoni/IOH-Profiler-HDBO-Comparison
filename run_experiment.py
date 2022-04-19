@@ -6,7 +6,6 @@ import sys
 import os
 import json
 from ioh import Experiment, get_problem, logger, problem, OptimizationType
-from bayes_optim.acquisition import OnePlusOne_Cholesky_CMA
 import numpy as np
 import copy
 import time
