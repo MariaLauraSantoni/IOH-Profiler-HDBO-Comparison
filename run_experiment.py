@@ -53,8 +53,7 @@ def run_particular_experiment(my_optimizer_name, fid, iid, dim, rep, folder_name
         folder_name=folder_name, algorithm_name=my_optimizer_name)
     print(f'    Logging to the folder {l.folder_name}')
     sys.stdout.flush()
-    l.watch(algorithm, ['lower_space_dim', 'extracted_information',
-            'out_of_the_box_solutions', 'kernel_config', 'acq_opt_time', 'model_fit_time'])
+    l.watch(algorithm, [])
     p = MyObjectiveFunctionWrapper(fid, iid, dim)
     p.attach_logger(l)
     algorithm(my_optimizer_name, p, fid, iid, dim)
