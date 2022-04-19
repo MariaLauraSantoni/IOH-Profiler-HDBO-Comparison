@@ -1,0 +1,11 @@
+{
+    "folder": "TEST",
+    "optimizers": ["BO_sklearn"],
+    "fids": [21],
+    "iids": [0],
+    "dims": [20],
+    "reps": 30,
+    "lb": -5,
+    "ub": 5,
+    "extra": "Tests"
+}
