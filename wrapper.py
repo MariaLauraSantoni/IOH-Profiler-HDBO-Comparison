@@ -111,7 +111,8 @@ class BO_development_bayesoptimWrapper:
         if not os.path.isdir(bayes_bo_lib):
             raise ImportError(
                 'No such module Bayesian-Optimization, please consider cloning this repository: https://github.com/wangronin/Bayesian-Optimization to the folder mylib/lib_BO_bayesoptim/')
-        sys.path.append(bayes_bo_lib)
+        sys.path.insert(0, bayes_bo_lib)
+        print(sys.path)
 
         self.func = func
         self.dim = dim
@@ -122,7 +123,8 @@ class BO_development_bayesoptimWrapper:
         self.random_seed = random_seed
 
     def run(self):
-        from bayes_optim.extension import RealSpace, BO
+        from bayes_optim.extension import RealSpace
+        from bayes_optim.bayes_opt import BO
 
         space = RealSpace([self.lb, self.ub], random_seed=self.random_seed) * self.dim
         opt = BO(
