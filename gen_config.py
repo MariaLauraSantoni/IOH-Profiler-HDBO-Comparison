@@ -2,79 +2,53 @@ import sys
 import os
 import json
 import datetime
- 
- 
+
+
 class ExperimentEnvironment:
-    HAO_SLURM_SCRIPT_TEMPLATE = '''#!/bin/env bash
- 
-#SBATCH --job-name=##folder##
-#SBATCH --array=0-##jobs_count##
-#SBATCH --partition=cpu-long
-#SBATCH --mem-per-cpu=1G
-#SBATCH --time=7-00:00:00
-#SBATCH --mail-user=kirant9797@gmail.com
-#SBATCH --mail-type=END,FAIL
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task=1
-#SBATCH --output=##logs_out##
-#SBATCH --error=##logs_err##
- 
-num=##from_number##
-FILE_ID=$((${SLURM_ARRAY_TASK_ID}+$num))
-python ../single_experiment.py configs/${FILE_ID}.json
-'''
- 
     ELENA_SLURM_SCRIPT_TEMPLATE = '''#!/bin/bash
- 
+
 #SBATCH --job-name=##folder##
 #SBATCH --array=0-##jobs_count##
 #SBATCH --clusters=serial
-#SBATCH --partition=serial_long
+#SBATCH --partition=serial_std
 #SBATCH --mem=512MB
-#SBATCH --time=7-00:00:00
-#SBATCH --mail-user=kirant9797@gmail.com
+#SBATCH --time=2:00:00
+#SBATCH --mail-user=marialaura.santoni@studenti.unicam.it
 #SBATCH --mail-type=END,FAIL
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --output=##logs_out##
 #SBATCH --error=##logs_err##
- 
+
 num=##from_number##
 FILE_ID=$((${SLURM_ARRAY_TASK_ID}+$num))
-python ../single_experiment.py configs/${FILE_ID}.json
+python ../run_experiment.py configs/${FILE_ID}.json
 '''
- 
-    def __init__(self, whose_server):
+
+    def __init__(self):
         now = datetime.datetime.now()
         suffix = now.strftime('%d-%m-%Y_%Hh%Mm%Ss')
         folder_name = 'run_' + suffix
         os.makedirs(folder_name, exist_ok=False)
         print(f'Experiment root is: {folder_name}')
         self.experiment_root = os.path.abspath(folder_name)
-        if whose_server == 'Hao':
-            self.__max_array_size = 1000
-        else:
-            self.__max_array_size = 100
+        self.__max_array_size = 100
         self.__number_of_slurm_scripts = 0
-        self.whose_server = whose_server
- 
+
     def set_up_by_experiment_config_file(self, experiment_config_file_name):
         self.__generate_configs(experiment_config_file_name)
         self.__create_log_dir()
         self.__generate_slurm_script()
- 
+
     def __create_log_dir(self):
         self.logs_folder = os.path.join(self.experiment_root, 'logs')
         os.mkdir(self.logs_folder)
- 
+
     def __generate_slurm_script(self):
         self.__number_of_slurm_scripts = 0
         logs_out = os.path.join(self.logs_folder, '%A_%a.out')
         logs_err = os.path.join(self.logs_folder, '%A_%a.err')
-        if self.whose_server == 'Hao':
-            script = ExperimentEnvironment.HAO_SLURM_SCRIPT_TEMPLATE
-        else:
-            script = ExperimentEnvironment.ELENA_SLURM_SCRIPT_TEMPLATE
+        script = ExperimentEnvironment.ELENA_SLURM_SCRIPT_TEMPLATE
         script = script\
                 .replace('##folder##', self.result_folder_prefix)\
                 .replace('##logs_out##', logs_out)\
@@ -95,7 +69,7 @@ python ../single_experiment.py configs/${FILE_ID}.json
                         .replace('##jobs_count##', str(r - 1)))
             offset += r
             self.__number_of_slurm_scripts += 1
- 
+
     def __generate_configs(self, experiment_config_file_name):
         with open(experiment_config_file_name, 'r') as f:
             config = json.load(f)
@@ -136,16 +110,16 @@ python ../single_experiment.py configs/${FILE_ID}.json
                             cur_config_number += 1
         print(f'Generated {cur_config_number} files')
         self.generated_configs = cur_config_number
- 
+
     def print_helper(self):
         print(f'cd {self.experiment_root} && for (( i=0; i<{self.__number_of_slurm_scripts}; ++i )); do sbatch slurm$i.sh; done')
- 
- 
+
+
 def main(argv):
-    env = ExperimentEnvironment(argv[2])
+    env = ExperimentEnvironment()
     env.set_up_by_experiment_config_file(argv[1])
     env.print_helper()
- 
- 
+
+
 if __name__ == '__main__':
     main(sys.argv)
