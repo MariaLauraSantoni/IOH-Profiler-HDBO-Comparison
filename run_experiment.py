@@ -17,7 +17,7 @@ def decide_doe_size(dim):
 
 
 def decide_total_budget(dim, doe_size):
-    return 5 * dim
+    return 10 * dim + 50
 
 
 class AlgorithmWrapper:

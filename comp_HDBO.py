@@ -9,8 +9,8 @@ import numpy as np
 # Alternatives: "saasbo", "BO_sklearn", "BO_bayesoptim", "random", "linearPCABO", "turbo1", "turbom"
 
 
-#alternatives = [ "saasbo", "BO_sklearn", "BO_bayesoptim", "random", "linearPCABO" ]
-alternatives = ["SMAC3"]
+#alternatives = [ "BO_sklearn", "BO_bayesoptim", "random", "linearPCABO", "turbo1", "turbom" ]
+alternatives = ["BO_sklearn"]
 
 
 
