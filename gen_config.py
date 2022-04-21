@@ -12,7 +12,7 @@ class ExperimentEnvironment:
 #SBATCH --clusters=serial
 #SBATCH --partition=serial_std
 #SBATCH --mem=512MB
-#SBATCH --time=2:00:00
+#SBATCH --time=90:00:00
 #SBATCH --mail-user=marialaura.santoni@studenti.unicam.it
 #SBATCH --mail-type=END,FAIL
 #SBATCH --ntasks=1
