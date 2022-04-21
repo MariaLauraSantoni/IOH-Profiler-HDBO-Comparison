@@ -72,5 +72,3 @@ options = {'x_range':x_range, # input domain
 e = ebo(f, options)
 start = time.time()
 e.run()
-
-print("elapsed time: ", time.time() - start)
