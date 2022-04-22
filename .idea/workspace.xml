@@ -2,9 +2,96 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="37fd092e-61cd-446d-88a1-13ac6315f0b9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Kirills_ioh_exp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/config.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/fitting/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/fitting/optimizing.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/gp_models/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/gp_models/kernels/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/gp_models/kernels/etc.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/gp_models/kernels/imq_kernel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/gp_models/kernels/memory_efficient_gam_kernel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/gp_models/kernels/polynomial_projection_kernels.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/gp_models/kernels/scaled_projection_kernel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/gp_models/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/rp.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RPA/training_routines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/IOH-Profiler-HDBO-Comparison.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/IOH-Profiler-HDBO-Comparison.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/comp_HDBO.py" beforeDir="false" afterPath="$PROJECT_DIR$/comp_HDBO.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.test_ebo.py.swp" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/BO-RPA.py" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/BO-RPA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/Examples.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/Examples.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/Examples.py" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/Examples.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/RPA.py" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/RPA.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/bayesian-optimization.py" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/bayesian-optimization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/bayesian_optimization_ioh.py" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/bayesian_optimization_ioh.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-1/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-1/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-1/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-1/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-10/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-10/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-10/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-10/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-2/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-2/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-2/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-2/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-3/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-3/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-3/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-3/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-4/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-4/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-4/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-4/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-5/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-5/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-5/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-5/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-6/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-6/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-6/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-6/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-7/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-7/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-7/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-7/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-8/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-8/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-8/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-8/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-9/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-9/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run-9/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run-9/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run/IOHprofiler_f7_StepEllipsoid.info" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run/IOHprofiler_f7_StepEllipsoid.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/data/run/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/data/run/data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/ARD_RO.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/ARD_RO.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/ARD_model_spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/ARD_model_spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/GAM_spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/GAM_spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/Inverse_MQ_ARD_model_spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/Inverse_MQ_ARD_model_spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/RBF_model_spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/RBF_model_spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/SGPR_ARD_model_spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/SGPR_ARD_model_spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_deterministic_spec_unweighted.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_deterministic_spec_unweighted.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_deterministic_spec_unweighted_ski.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_deterministic_spec_unweighted_ski.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_J1_K1.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_J1_K1.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_J20_K1.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_J20_K1.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_J20_K1_ski.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_J20_K1_ski.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_Jd_K1.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_Jd_K1.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_Jd_spread.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_Jd_spread.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_postscale_J20.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_postscale_J20.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_postscale_J20_ski.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_postscale_J20_ski.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_prescale_J1.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_prescale_J1.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_prescale_J1_K20.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_prescale_J1_K20.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_prescale_J20.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_prescale_J20.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_rp_prescale_on_sphere.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_rp_prescale_on_sphere.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_spread_prescale_J20.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_spread_prescale_J20.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_spread_prescale_J20_ski.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_spread_prescale_J20_ski.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_spread_prescale_Jd.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_spread_prescale_Jd.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_spread_prescale_Jd_ski.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_spread_prescale_Jd_ski.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_spread_projections.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_spread_projections.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/additive_spread_projections_RO.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/additive_spread_projections_RO.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/best_of_single_proj.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/best_of_single_proj.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/cgp_spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/cgp_spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/deep_rp.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/deep_rp.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/duvenaud_additive_max_deg_7.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/duvenaud_additive_max_deg_7.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/ma_dpa_gp_ard.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/ma_dpa_gp_ard.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/multi_ARD_model_spec.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/multi_ARD_model_spec.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/polynomial_rp.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/polynomial_rp.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/polynomial_rp_smaller.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/polynomial_rp_smaller.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/model_specs/ppr_gp.json" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/model_specs/ppr_gp.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/originalboexample.py" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/originalboexample.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/run_scripts/additive_deterministic.sh" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/run_scripts/additive_deterministic.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/run_scripts/additive_spread_prescale_Jd.sh" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/run_scripts/additive_spread_prescale_Jd.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/run_scripts/test_run.sh" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/run_scripts/test_run.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/synthetic_test_script.py" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/synthetic_test_script.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/test.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/tmp.pk" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/tmp.pk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/uci/yacht/yacht.csv" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/uci/yacht/yacht.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/RPA/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,18 +127,59 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../Additive" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "last_opened_file_path": "/home/elena/PycharmProjects/IOH-Profiler-HDBO-Comparison/RPA"
+  }
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/mylib/lib_saasbo" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Kirills_ioh_exp">
+  <component name="RunManager" selected="Python.Examples_">
+    <configuration name="Examples" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="IOH-Profiler-HDBO-Comparison" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/ioh/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Randomly-Projected-Additive-GPs" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Randomly-Projected-Additive-GPs/Examples.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Examples_" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="IOH-Profiler-HDBO-Comparison" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/ioh/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/RPA" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RPA/Examples.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="Kirills_ioh_exp" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="IOH-Profiler-HDBO-Comparison" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -94,12 +222,39 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="gp_experiment_runner" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="IOH-Profiler-HDBO-Comparison" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="$USER_HOME$/anaconda3/envs/ioh/bin/python" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/Randomly-Projected-Additive-GPs" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Randomly-Projected-Additive-GPs/gp_experiment_runner.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Python.comp_HDBO" />
+      <item itemvalue="Python.Examples" />
+      <item itemvalue="Python.Examples_" />
+      <item itemvalue="Python.gp_experiment_runner" />
       <item itemvalue="Python.Kirills_ioh_exp" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Examples_" />
+        <item itemvalue="Python.Examples" />
+        <item itemvalue="Python.gp_experiment_runner" />
         <item itemvalue="Python.Kirills_ioh_exp" />
       </list>
     </recent_temporary>
