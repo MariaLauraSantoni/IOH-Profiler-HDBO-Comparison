@@ -118,3 +118,11 @@ def plot_f(f, filenm='test_function.eps'):
     plt.colorbar()
     plt.scatter(f.argmax[0], f.argmax[1], s=180, color='k', marker='+')
     plt.savefig(filenm)
+
+class Wrapped_IOH(object):
+    def __init__(self, f, dim):
+        self.f = f
+        self.f_max = f(5*np.ones(dim))
+
+    def __call__(self, x):
+        return self.f(np.array(x))

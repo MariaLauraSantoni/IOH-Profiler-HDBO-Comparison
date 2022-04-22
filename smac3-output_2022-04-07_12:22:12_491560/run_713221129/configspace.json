@@ -1,0 +1,88 @@
+{
+  "hyperparameters": [
+    {
+      "name": "x01",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    },
+    {
+      "name": "x02",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    },
+    {
+      "name": "x03",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    },
+    {
+      "name": "x04",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    },
+    {
+      "name": "x05",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    },
+    {
+      "name": "x06",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    },
+    {
+      "name": "x07",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    },
+    {
+      "name": "x08",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    },
+    {
+      "name": "x09",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    },
+    {
+      "name": "x10",
+      "type": "uniform_float",
+      "log": false,
+      "lower": -5.0,
+      "upper": 5.0,
+      "default": 0.0
+    }
+  ],
+  "conditions": [],
+  "forbiddens": [],
+  "python_module_version": "0.4.21",
+  "json_format_version": 0.2
+}

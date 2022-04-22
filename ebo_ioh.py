@@ -4,7 +4,7 @@ import sys
 
 sys.path.append('./mylib/' + 'lib_' + 'EBO')
 from ebo_core.ebo import ebo
-from test_functions.simple_functions import plot_f, SampledGpFunc, sample_z
+from test_functions.simple_functions import Wrapped_IOH, sample_z
 import time
 import logging
 logging.basicConfig(filename='example.log',level=logging.DEBUG)
@@ -21,23 +21,27 @@ DoE_samples = int(.20 * budget)
 z = sample_z(dim)
 k = np.array([10]*dim)
 x_range = nm.repmat([[-5],[5]], 1, dim)
+x_range= x_range.astype(float)
+
 sigma = 0.01
 n = 100
 
 
 #Create a problem object, either by giving the problem id from within the suite
-f = get_problem(21, dimension=dim, instance=1, problem_type='Real')
-
-#Print some properties of the problem
-print(f.meta_data)
-#Access the box-constrains for this problem
-print(f.constraint.lb, f.constraint.ub)
-#Show the state of the optimization
-print(f.state)
-
-#Create default logger compatible with IOHanalyzer
+f = get_problem(21, dimension=dim, instance=0, problem_type='Real')
 l = logger.Analyzer(root="data", folder_name="run", algorithm_name="ebo", algorithm_info="test of IOHexperimenter in python")
 f.attach_logger(l)
+f= Wrapped_IOH(f, dim)
+
+#Print some properties of the problem
+#print(f.meta_data)
+#Access the box-constrains for this problem
+#print(f.constraint.lb, f.constraint.ub)
+#Show the state of the optimization
+#print(f.state)
+
+#Create default logger compatible with IOHanalyzer
+
 
 #run ebo
 options = {'x_range':x_range, # input domain
@@ -72,3 +76,5 @@ options = {'x_range':x_range, # input domain
 e = ebo(f, options)
 start = time.time()
 e.run()
+
+print("elapsed time: ", time.time() - start)
