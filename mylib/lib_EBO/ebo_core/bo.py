@@ -31,6 +31,33 @@ class bo(object):
     def learn(self):
         self.gp, self.z, self.k = self.solver.run(self.options['gibbs_iter'])
 
+    # def run(self):
+    #     if self.eval_only:
+    #         ynew = [self.f(x) for x in self.newX]
+    #         return ynew
+    #
+    #     # return random inputs if X is empty
+    #     if not self.well_defined:
+    #         xnew = np.random.uniform(self.x_range[0], self.x_range[1], (self.n_bo, self.dx))
+    #         acfnew = [self.max_value] * self.n_bo
+    #         return xnew, acfnew, self.solver.z, self.solver.k
+    #
+    #     # learn and optimize
+    #     self.learn()
+    #     # initialization
+    #     xnew = np.empty((self.n_bo, self.dx))
+    #     xnew[0] = np.random.uniform(self.x_range[0], self.x_range[1])
+    #     # optimize group by group
+    #     all_cat = np.unique(self.z)
+    #     for a in np.random.permutation(all_cat):
+    #         active = self.z == a
+    #         af = lambda x: acfun(x, xnew[0], active, self.max_value, self.gp)
+    #         xnew[:, active] = global_minimize(af, self.x_range[:, active], \
+    #                                           self.opt_n, self.n_bo, self.n_bo_top_percent)
+    #     mu, var = self.gp.predict(xnew)
+    #     acfnew = np.squeeze((self.max_value - mu) / np.sqrt(var))
+    #     return xnew, acfnew, self.z, self.k
+
     def run(self):
         if self.eval_only:
             ynew = [self.f(x) for x in self.newX]
@@ -51,13 +78,12 @@ class bo(object):
         all_cat = np.unique(self.z)
         for a in np.random.permutation(all_cat):
             active = self.z == a
-            af = lambda x: acfun(x, xnew[0], active, self.max_value, self.gp)
+            af = lambda x: acfun(x, xnew[0], active, 0.5, self.gp)
             xnew[:, active] = global_minimize(af, self.x_range[:, active], \
                                               self.opt_n, self.n_bo, self.n_bo_top_percent)
         mu, var = self.gp.predict(xnew)
-        acfnew = np.squeeze((self.max_value - mu) / np.sqrt(var))
+        acfnew = af
         return xnew, acfnew, self.z, self.k
-
 
 def global_minimize(f, x_range, n, n_bo=1, n_bo_top_percent=1.0):
     dx = x_range.shape[1]
@@ -73,8 +99,21 @@ def global_minimize(f, x_range, n, n_bo=1, n_bo_top_percent=1.0):
     inds = inds[inds_of_inds[:n_bo]]
     return tx[inds, :]
 
+# def acfun(X, fixX, active_dims, maxval, gp, b):
+#
+#     if len(X.shape) > 1:
+#         nX = np.matlib.repmat(fixX, X.shape[0], 1)
+#         nX[:, active_dims] = X
+#     else:
+#         nX = fixX
+#         nX[active_dims] = X
+#     mu, var = gp.predict(nX)
+#     assert (var > 0).all(), 'error in acfun: variance <= 0??'
+#
+#     return np.squeeze((maxval - mu) / np.sqrt(var))
 
-def acfun(X, fixX, active_dims, maxval, gp):
+def acfun(X, fixX, active_dims, w, gp, b):
+
     if len(X.shape) > 1:
         nX = np.matlib.repmat(fixX, X.shape[0], 1)
         nX[:, active_dims] = X
@@ -83,34 +122,43 @@ def acfun(X, fixX, active_dims, maxval, gp):
         nX[active_dims] = X
     mu, var = gp.predict(nX)
     assert (var > 0).all(), 'error in acfun: variance <= 0??'
-
-    return np.squeeze((maxval - mu) / np.sqrt(var))
-
-def acfun_prova(X, fixX, active_dims, gp, ys, w = 0.5):
-    if len(X.shape) > 1:
-        nX = np.matlib.repmat(fixX, X.shape[0], 1)
-        nX[:, active_dims] = X
-    else:
-        nX = fixX
-        nX[active_dims] = X
-    mu, var = gp.predict(nX)
-    assert (var > 0).all(), 'error in acfun: variance <= 0??'
-
-
-    y_min = np.min(ys)  # best observed value sofar (lowest output)
     if w > 1 or w < 0:
         raise Exception("Weight should be in [0,1]")
+    y_min = b.get_best[2]
     if var == 0:
         return 0
     else:
-        fterm = (y_min - y_hat) * norm.cdf((y_min - y_hat) / var)
-        sterm = var * norm.pdf((y_min - y_hat) / var)
+        fterm = (y_min - mu) * norm.cdf((y_min - mu) / var)
+        sterm = var * norm.pdf((y_min - mu / var))
         if w == 0.5:  # to be consitent with definition of EI not weighted EI
             return fterm + sterm
         else:
             return w * fterm + (1 - w) * sterm
 
-    return exptimp
+# def acfun_prova(X, fixX, active_dims, gp, w = 0.5, bo()):
+#     if len(X.shape) > 1:
+#     nX = np.matlib.repmat(fixX, X.shape[0], 1)
+#     nX[:, active_dims] = X
+#     else:
+#         nX = fixX
+#         nX[active_dims] = X
+#     mu, var = gp.predict(nX)
+#     assert (var > 0).all(), 'error in acfun: variance <= 0??'
+#
+#     #y_min = np.min(ys)  # best observed value sofar (lowest output)
+#     if w > 1 or w < 0:
+#         raise Exception("Weight should be in [0,1]")
+#     if var == 0:
+#         return 0
+#     else:
+#         fterm = (y_min - mu) * norm.cdf((y_min - mu) / var)
+#         sterm = var * norm.pdf((y_min - mu / var)
+#         if w == 0.5:  # to be consitent with definition of EI not weighted EI
+#             return fterm + sterm
+#         else:
+#             return w * fterm + (1 - w) * sterm
+#
+#     return exptimp
 #
 #
 # def acfun_prova(X, fixX, active_dims, maxval, gp):
