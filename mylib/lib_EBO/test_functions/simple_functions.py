@@ -126,3 +126,47 @@ class Wrapped_IOH(object):
 
     def __call__(self, x):
         return self.f(np.array(x))
+
+class Wrapped_IOH_(object):
+    def __init__(self, x_range, dx, z, k, n, sigma, f_ioh):
+        self.dx = dx
+        self.z = z
+        self.k = k
+        self.sigma = sigma
+        self.x_range = x_range
+        self.f_ioh = f_ioh
+        kern = DenseL1Kernel(self.z, self.k)
+
+        X = np.random.uniform(x_range[0], x_range[1], (n, dx))
+        # kxx = kern(X) + sigma ** 2 * np.eye(X.shape[0])
+        # y = np.random.multivariate_normal(np.zeros(n), kxx).T
+        y = np.array([self.f_ioh(x) for x in X])
+
+        self.gp = DenseKernelGP(X, y, sigma=sigma, kern=kern)
+        self.gp.fit()
+        self.get_max()
+
+    def get_max(self):
+        x = self.x_range[0].copy()
+        all_cat = np.unique(self.z)
+        for a in all_cat:
+            active = self.z == a
+            k1 = DenseL1Kernel(self.z[active], self.k[active])
+            af = lambda x: np.array(k1(x, self.gp.X[:, active])).dot(self.gp.alpha)
+            x[active] = np.squeeze(global_minimize(af, self.x_range[:, active], 10000))
+
+        self.argmax = x
+        self.f_max = -np.squeeze(np.array(self.gp.kern(x, self.gp.X)).dot(self.gp.alpha))
+
+    def __call__(self, x):
+        # if x.ndim == 1:
+        #     n = 1
+        # else:
+        #     n = x.shape[0]
+        # # kXn = np.array(self.gp.kern(x, self.gp.X))
+        # # mu = kXn.dot(self.gp.alpha)
+        # # f = mu
+        # f = np.random.normal(size=n) * self.sigma
+        f = self.f_ioh(x)
+        return -np.squeeze(f)
+

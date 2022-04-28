@@ -4,7 +4,7 @@ import sys
 
 sys.path.append('./mylib/' + 'lib_' + 'EBO')
 from ebo_core.ebo import ebo
-from test_functions.simple_functions import Wrapped_IOH, sample_z
+from test_functions.simple_functions import Wrapped_IOH_, sample_z, SampledGpFunc
 import time
 import logging
 logging.basicConfig(filename='example.log',level=logging.DEBUG)
@@ -12,26 +12,35 @@ logging.basicConfig(filename='example.log',level=logging.DEBUG)
 from ioh import get_problem, logger
 
 # Common settings
-dim = 10
-ub = 5
-lb = -5
-budget=10
+dim = 2 #10
+ub = 5.
+lb = -5.
+budget=100
 #budget= 10 * dim + 50
 DoE_samples = int(.20 * budget)
-z = sample_z(dim)
-k = np.array([10]*dim)
-x_range = nm.repmat([[-5],[5]], 1, dim)
-x_range= x_range.astype(float)
+# z = sample_z(dim)
+# k = np.array([10]*dim)
+# x_range = nm.repmat([[-5],[5]], 1, dim)
+# x_range= x_range.astype(float)
 
+
+##################### define test function ######################
+dx = dim
+z = sample_z(dx)
+k = np.array([10] * dx)
+x_range = nm.repmat([[lb], [ub]], 1, dx)
 sigma = 0.01
-n = 100
+n = DoE_samples
+f_ioh = get_problem(21, dimension=dim, instance=0, problem_type='Real')
+f = Wrapped_IOH_(x_range, dx, z, k, n, sigma, f_ioh)
+# f = SampledGpFunc(x_range, dx, z, k, n, sigma)
+# plot_f(f)
+##################################################################
 
 
 #Create a problem object, either by giving the problem id from within the suite
-f = get_problem(21, dimension=dim, instance=0, problem_type='Real')
 l = logger.Analyzer(root="data", folder_name="run", algorithm_name="ebo", algorithm_info="test of IOHexperimenter in python")
-f.attach_logger(l)
-f= Wrapped_IOH(f, dim)
+f_ioh.attach_logger(l)
 
 #Print some properties of the problem
 #print(f.meta_data)
