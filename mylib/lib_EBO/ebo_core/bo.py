@@ -2,6 +2,9 @@ import numpy as np
 from ebo_core.gibbs import GibbsSampler
 from scipy.optimize import minimize
 
+from scipy.stats import norm
+
+
 
 class bo(object):
     def __init__(self, f, X, y, x_range, eval_only, extra, options):
@@ -82,3 +85,114 @@ def acfun(X, fixX, active_dims, maxval, gp):
     assert (var > 0).all(), 'error in acfun: variance <= 0??'
 
     return np.squeeze((maxval - mu) / np.sqrt(var))
+
+def acfun_prova(X, fixX, active_dims, gp, ys, w = 0.5):
+    if len(X.shape) > 1:
+        nX = np.matlib.repmat(fixX, X.shape[0], 1)
+        nX[:, active_dims] = X
+    else:
+        nX = fixX
+        nX[active_dims] = X
+    mu, var = gp.predict(nX)
+    assert (var > 0).all(), 'error in acfun: variance <= 0??'
+
+
+    y_min = np.min(ys)  # best observed value sofar (lowest output)
+    if w > 1 or w < 0:
+        raise Exception("Weight should be in [0,1]")
+    if var == 0:
+        return 0
+    else:
+        fterm = (y_min - y_hat) * norm.cdf((y_min - y_hat) / var)
+        sterm = var * norm.pdf((y_min - y_hat) / var)
+        if w == 0.5:  # to be consitent with definition of EI not weighted EI
+            return fterm + sterm
+        else:
+            return w * fterm + (1 - w) * sterm
+
+    return exptimp
+#
+#
+# def acfun_prova(X, fixX, active_dims, maxval, gp):
+#     if len(X.shape) > 1:
+#         nX = np.matlib.repmat(fixX, X.shape[0], 1)
+#         nX[:, active_dims] = X
+#     else:
+#         nX = fixX
+#         nX[active_dims] = X
+#     mu, var = gp.predict(nX)
+#     assert (var > 0).all(), 'error in acfun: variance <= 0??'
+#     w=0.5
+#     y_min = np.min(ys)  # best observed value sofar (lowest output)
+#
+#     fterm = (y_min - y_hat) * norm.cdf((y_min - y_hat) / var)
+#     sterm = var * norm.pdf((y_min - y_hat) / var)
+#     if w == 0.5:  # to be consitent with definition of EI not weighted EI
+#         return fterm + sterm
+#     else:
+#         return w * fterm + (1 - w) * sterm
+#
+#     return exptimp
+#
+# def acfun_prova(X, fixX,active_dims, maxval, gp):
+#     """ expected_improvement
+#     Expected improvement acquisition function.
+#     Arguments:
+#     ----------
+#         x: array-like, shape = [n_samples, n_hyperparams]
+#             The point for which the expected improvement needs to be computed.
+#         gaussian_process: GaussianProcessRegressor object.
+#             Gaussian process trained on previously evaluated hyperparameters.
+#         evaluated_loss: Numpy array.
+#             Numpy array that contains the values off the loss function for the previously
+#             evaluated hyperparameters.
+#         greater_is_better: Boolean.
+#             Boolean flag that indicates whether the loss function is to be maximised or minimised.
+#         n_params: int.
+#             Dimension of the hyperparameter space.
+#     """
+#     n_params=1
+#     x_to_predict = X.reshape(-1, n_params)
+#
+#     mu, sigma = gp.predict(x_to_predict, return_std=True)
+#     greater_is_better=False
+#     if greater_is_better:
+#         loss_optimum = np.max(evaluated_loss)
+#     else:
+#         loss_optimum = np.min(evaluated_loss)
+#
+#     scaling_factor = (-1) ** (not greater_is_better)
+#
+#     # In case sigma equals zero
+#     with np.errstate(divide='ignore'):
+#         Z = scaling_factor * (mu - loss_optimum) / sigma
+#         expected_improvement = scaling_factor * (mu - loss_optimum) * norm.cdf(Z) + sigma * norm.pdf(Z)
+#         expected_improvement[sigma == 0.0] == 0.0
+#
+#     return -1 * expected_improvement
+#
+# def acqufun(X,fixX,active, active_dims, maxval, gp):
+#     if len(X.shape) > 1:
+#         nX = np.matlib.repmat(fixX, X.shape[0], 1)
+#         nX[:, active_dims] = X
+#     else:
+#         nX = fixX
+#         nX[active_dims] = X
+#     mu, var = gp.predict(nX)
+#
+#
+#
+#     sigma = var.reshape(-1, 1)
+#
+#     # Needed for noise-based model,
+#     # otherwise use np.max(Y_sample).
+#     # See also section 2.4 in [1]
+#     mu_opt = np.max(mu)
+#     xi = 0.01
+#     with np.errstate(divide='warn'):
+#         imp = mu - mu_sample_opt - xi
+#         Z = imp / sigma
+#         ei = imp * norm.cdf(Z) + sigma * norm.pdf(Z)
+#         ei[sigma == 0.0] = 0.0
+#
+#     return ei

@@ -194,7 +194,7 @@ class ebo(object):
 
 
 def check_valid_options(options):
-    all_params = ['x_range', 'dx', 'max_value', \
+    all_params = ['x_range', 'dx', #'max_value', \
                   'T', 'B', 'dim_limit', 'isplot', 'z', 'k', 'alpha', 'beta', \
                   'opt_n', 'pid', 'datadir', 'gibbs_iter', 'useAzure', 'n_add', \
                   'gp_type', 'gp_sigma', 'n_bo', 'n_top', 'min_leaf_size', 'func_cheap', 'thresAzure', 'save_file_name']
