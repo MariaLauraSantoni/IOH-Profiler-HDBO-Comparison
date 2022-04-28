@@ -53,7 +53,7 @@ class ebo(object):
         x_range, T, B, dim_limit, min_leaf_size, max_n_leaves, n_bo, n_top = self.get_params()
         tstart = self.X.shape[0] // B
         for t in range(tstart, T):
-            # breakpoint()
+            breakpoint()
             # search space partition
             ref = self.y.min() if self.y.shape[0] > 0 else None
             self.tree = MondrianTree(self.X, self.y, x_range, max_n_leaves, reference=ref)
