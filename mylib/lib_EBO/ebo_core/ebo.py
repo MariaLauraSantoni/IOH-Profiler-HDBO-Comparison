@@ -96,7 +96,7 @@ class ebo(object):
             self.print_step(newX, t)
 
             # save
-            self.save()
+            #self.save()
 
         self.pause()
 
@@ -163,7 +163,7 @@ class ebo(object):
         if self.options['isplot']:
             plot_ebo(self.tree, newX, t)
         _, besty, cur = self.get_best()
-        print('t=', t, ', bestid=', cur, ', besty=', besty)
+        print('t=', t, ', bestid=', cur, ', besty=', -besty)
 
         print('final z=', self.z, ' final k=', self.k)
 

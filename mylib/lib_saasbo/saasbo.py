@@ -129,6 +129,8 @@ def run_saasbo(
 
     max_exceptions = 3
     num_exceptions = 0
+    self.acq_opt_time = 0
+    self.mode_fit_time = 0
 
     # Initial queries are drawn from a Sobol sequence
     with warnings.catch_warnings(record=True):  # suppress annoying qmc.Sobol UserWarning
@@ -147,7 +149,7 @@ def run_saasbo(
 
         # If for whatever reason we fail to return a query point above we choose one at random from the domain
         try:
-            start = time.time()
+            start = time.process_time()
             # define GP with SAAS prior
             gp = SAASGP(
                 alpha=alpha,
@@ -163,12 +165,14 @@ def run_saasbo(
 
             # fit SAAS GP to training data
             gp = gp.fit(X, train_Y)
-            print(f"GP fitting took {time.time() - start:.2f} seconds")
+            self.mode_fit_time = time.process_time() - start
+            #print(f"GP fitting took {time.time() - start:.2f} seconds")
 
-            start = time.time()
+            start = time.process_time()
             # do EI optimization using LBFGS
             x_next = optimize_ei(gp=gp, y_target=y_target, xi=0.0, num_restarts_ei=num_restarts_ei, num_init=5000)
-            print(f"Optimizing EI took {time.time() - start:.2f} seconds")
+            self.acq_opt_time = time.process_time() - start
+            #print(f"Optimizing EI took {time.time() - start:.2f} seconds")
         except Exception:
             num_exceptions += 1
             if num_exceptions <= max_exceptions:
