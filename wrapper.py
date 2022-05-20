@@ -263,7 +263,13 @@ class linearPCABOWrapper:
             acquisition_optimization={"optimizer": "BFGS"},
             random_seed=self.random_seed
         )
+        
         print(opt.run())
+        print(opt.acq_opt_time)
+        print(opt.mode_fit_time)
+        self.acq_opt_time = opt.acq_opt_time
+        self.mode_fit_time = opt.mode_fit_time
+
 
 
 class turbo1Wrapper:

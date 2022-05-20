@@ -22,7 +22,6 @@ class MyIOHFormatOnEveryEvaluationLogger:
                 x = x + 1
 
     def watch(self, algorithm, extra_data):
-        # self.extra_info_getters = [getattr(algorithm, attr) for attr in extra_data]
         self.algorithm = algorithm
         self.extra_info_getters = extra_data
 
