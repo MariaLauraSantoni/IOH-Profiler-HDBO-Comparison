@@ -46,33 +46,37 @@ class AlgorithmWrapper:
         self.opt.run()
 
 
-    @property
-    def lower_space_dim(self) -> int:
-        if self.optimizer_name == 'BO':
-            return self.dim
-        return self.opt.get_lower_space_dimensionality()
-
-    @property
-    def extracted_information(self) -> float:
-        if self.optimizer_name == 'BO':
-            return 1.0
-        return self.opt.get_extracted_information()
-
-    @property
-    def kernel_config(self) -> str:
-        return self.opt._pca.get_kernel_parameters()
-
-    @property
-    def out_of_the_box_solutions(self) -> int:
-        return self.opt.out_solutions
+    # @property
+    # def lower_space_dim(self) -> int:
+    #     if self.optimizer_name == 'BO':
+    #         return self.dim
+    #     return self.opt.get_lower_space_dimensionality()
+    #
+    # @property
+    # def extracted_information(self) -> float:
+    #     if self.optimizer_name == 'BO':
+    #         return 1.0
+    #     return self.opt.get_extracted_information()
+    #
+    # @property
+    # def kernel_config(self) -> str:
+    #     return self.opt._pca.get_kernel_parameters()
+    #
+    # @property
+    # def out_of_the_box_solutions(self) -> int:
+    #     return self.opt.out_solutions
 
     @property
     def acq_opt_time(self) -> float:
-        return self.opt.acq_opt_time
+        return self.opt.get_acq_time()
 
     @property
     def model_fit_time(self) -> float:
-        return self.opt.mode_fit_time
+        return self.opt.get_mode_time()
+
+    @property
+    def cum_iteration_time(self) -> float:
+        return self.opt.get_iter_time()
 
 def run_particular_experiment(my_optimizer_name, fid, iid, dim, rep, folder_name):
     algorithm = AlgorithmWrapper(rep)
@@ -81,8 +85,7 @@ def run_particular_experiment(my_optimizer_name, fid, iid, dim, rep, folder_name
     print(f'    Logging to the folder {l.folder_name}')
     sys.stdout.flush()
    # l.watch(algorithm, [])
-    l.watch(algorithm, ['lower_space_dim', 'extracted_information',
-            'out_of_the_box_solutions', 'kernel_config', 'acq_opt_time', 'model_fit_time'])
+    l.watch(algorithm, ['acq_opt_time', 'model_fit_time', 'cum_iteration_time'])
     p = MyObjectiveFunctionWrapper(fid, iid, dim)
     p.attach_logger(l)
     print("dim = ", dim)

@@ -11,6 +11,7 @@
 
 import math
 import sys
+import time
 from copy import deepcopy
 
 import gpytorch
@@ -126,6 +127,10 @@ class Turbo1:
 
         # Initialize parameters
         self._restart()
+
+        self.acq_opt_time = 0
+        self.mode_fit_time = 0
+        self.cum_iteration_time = 0
 
     def _restart(self):
         self._X = []
@@ -264,6 +269,7 @@ class Turbo1:
                 sys.stdout.flush()
 
             # Thompson sample to get next suggestions
+
             while self.n_evals < self.max_evals and self.length >= self.length_min:
                 # Warp inputs
                 X = to_unit_cube(deepcopy(self._X), self.lb, self.ub)
@@ -272,14 +278,17 @@ class Turbo1:
                 fX = deepcopy(self._fX).ravel()
 
                 # Create th next batch
+                start = time.process_time()
                 X_cand, y_cand, _ = self._create_candidates(
                     X, fX, length=self.length, n_training_steps=self.n_training_steps, hypers={}
                 )
-                X_next = self._select_candidates(X_cand, y_cand)
+                self.mode_fit_time = time.process_time() - start
 
+                start = time.process_time()
+                X_next = self._select_candidates(X_cand, y_cand)
+                self.acq_opt_time = time.process_time() - start
                 # Undo the warping
                 X_next = from_unit_cube(X_next, self.lb, self.ub)
-
                 # Evaluate batch
                 fX_next = np.array([[self.f(x)] for x in X_next])
 
@@ -299,3 +308,4 @@ class Turbo1:
                 # Append data to the global history
                 self.X = np.vstack((self.X, deepcopy(X_next)))
                 self.fX = np.vstack((self.fX, deepcopy(fX_next)))
+        self.cum_iteration_time = time.process_time()

@@ -64,6 +64,7 @@ def optimize_ei(gp, y_target, xi=0.0, num_restarts_ei=5, num_init=5000):
             args=(y_target, gp, 0.0),
             maxfun=100,  # this limits computational cost
         )
+        # x, fx, _ = x0, 3, 4
         fx = -1 * fx  # Back to maximization
 
         if fx > y_best:
@@ -72,123 +73,178 @@ def optimize_ei(gp, y_target, xi=0.0, num_restarts_ei=5, num_init=5000):
     return x_best
 
 
-def run_saasbo(
-    f,
-    lb,
-    ub,
-    max_evals,
-    num_init_evals,
-    seed=None,
-    alpha=0.1,
-    num_warmup=512,
-    num_samples=256,
-    thinning=16,
-    num_restarts_ei=5,
-    kernel="rbf",
-    device="cpu",
-):
-    """
-    Run SAASBO and approximately minimize f.
+class Saasbo:
 
-    Arguments:
-    f: function to minimize. should accept a D-dimensional np.array as argument. the input domain of f
-        is assumed to be the D-dimensional rectangular box bounded by lower and upper bounds lb and ub.
-    lb: D-dimensional vector of lower bounds (np.array)
-    ub: D-dimensional vector of upper bounds (np.array)
-    max_evals: The total evaluation budget
-    num_init_evals: The initial num_init_evals query points are chosen at random from the input
-        domain using a Sobol sequence. must satisfy num_init_evals < max_evals.
-    seed: Random number seed (int or None); defaults to None
-    alpha: Positive float that controls the level of sparsity (smaller alpha => more sparsity).
-        defaults to alpha = 0.1.
-    num_warmup: The number of warmup samples to use in HMC inference. defaults to 512.
-    num_samples: The number of post-warmup samples to use in HMC inference. defaults to 256.
-    thinning: Positive integer that controls the fraction of posterior hyperparameter samples
-        that are used to compute the expected improvement. for example thinning==2 will use every
-        other sample. defaults to no thinning (thinning==1).
-    num_restarts_ei: The number of restarts for L-BFGS-B when optimizing EI.
-    kernel: By default saasbo uses rbf, but matern is also supported.
-    device: Whether to use cpu or gpu. defaults to "cpu".
+    def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
 
-    Returns:
-        X: np.array containing all query points (of which there are max_evals many)
-        Y: np.array containing all observed function evaluations (of which there are max_evals many)
-    """
-    if max_evals <= num_init_evals:
-        raise ValueError("Must choose max_evals > num_init_evals.")
-    if lb.shape != ub.shape or lb.ndim != 1:
-        raise ValueError("The lower/upper bounds lb and ub must have the same shape and be D-dimensional vectors.")
-    if alpha <= 0.0:
-        raise ValueError("The hyperparameter alpha must be positive.")
-    if device not in ["cpu", "gpu"]:
-        raise ValueError("The device must be cpu or gpu.")
+        self.func = func
+        self.dim = dim
+        self.ub = ub
+        self.lb = lb
+        self.total_budget = total_budget
+        self.Doe_size = DoE_size
+        self.random_seed = random_seed
+        self.acq_opt_time = 0
+        self.mode_fit_time = 0
+        self.cum_iteration_time = 0
 
-    numpyro.set_platform(device)
-    enable_x64()
-    numpyro.set_host_device_count(1)
+    def run_saasbo(
+            self,
+            f,
+            lb,
+            ub,
+            max_evals,
+            num_init_evals,
+            seed=None,
+            alpha=0.1,
+            num_warmup=512,
+            num_samples=256,
+            thinning=16,
+            num_restarts_ei=5,
+            kernel="rbf",
+            device="cpu",
+        ):
+        """
+        Run SAASBO and approximately minimize f.
 
-    max_exceptions = 3
-    num_exceptions = 0
-    self.acq_opt_time = 0
-    self.mode_fit_time = 0
+        Arguments:
+        f: function to minimize. should accept a D-dimensional np.array as argument. the input domain of f
+            is assumed to be the D-dimensional rectangular box bounded by lower and upper bounds lb and ub.
+        lb: D-dimensional vector of lower bounds (np.array)
+        ub: D-dimensional vector of upper bounds (np.array)
+        max_evals: The total evaluation budget
+        num_init_evals: The initial num_init_evals query points are chosen at random from the input
+            domain using a Sobol sequence. must satisfy num_init_evals < max_evals.
+        seed: Random number seed (int or None); defaults to None
+        alpha: Positive float that controls the level of sparsity (smaller alpha => more sparsity).
+            defaults to alpha = 0.1.
+        num_warmup: The number of warmup samples to use in HMC inference. defaults to 512.
+        num_samples: The number of post-warmup samples to use in HMC inference. defaults to 256.
+        thinning: Positive integer that controls the fraction of posterior hyperparameter samples
+            that are used to compute the expected improvement. for example thinning==2 will use every
+            other sample. defaults to no thinning (thinning==1).
+        num_restarts_ei: The number of restarts for L-BFGS-B when optimizing EI.
+        kernel: By default saasbo uses rbf, but matern is also supported.
+        device: Whether to use cpu or gpu. defaults to "cpu".
 
-    # Initial queries are drawn from a Sobol sequence
-    with warnings.catch_warnings(record=True):  # suppress annoying qmc.Sobol UserWarning
-        X = qmc.Sobol(len(lb), scramble=True, seed=seed).random(num_init_evals)
+        Returns:
+            X: np.array containing all query points (of which there are max_evals many)
+            Y: np.array containing all observed function evaluations (of which there are max_evals many)
+        """
+        if max_evals <= num_init_evals:
+            raise ValueError("Must choose max_evals > num_init_evals.")
+        if lb.shape != ub.shape or lb.ndim != 1:
+            raise ValueError("The lower/upper bounds lb and ub must have the same shape and be D-dimensional vectors.")
+        if alpha <= 0.0:
+            raise ValueError("The hyperparameter alpha must be positive.")
+        if device not in ["cpu", "gpu"]:
+            raise ValueError("The device must be cpu or gpu.")
 
-    Y = np.array([f(lb + (ub - lb) * x) for x in X])
+        numpyro.set_platform(device)
+        enable_x64()
+        numpyro.set_host_device_count(1)
 
-    print("Starting SAASBO optimization run.")
-    print(f"First {num_init_evals} queries drawn at random. Best minimum thus far: {Y.min().item():.3f}")
+        max_exceptions = 3
+        num_exceptions = 0
 
-    while len(Y) < max_evals:
-        print(f"=== Iteration {len(Y)} ===", flush=True)
-        # standardize training data
-        train_Y = (Y - Y.mean()) / Y.std()
-        y_target = train_Y.min().item()
 
-        # If for whatever reason we fail to return a query point above we choose one at random from the domain
-        try:
-            start = time.process_time()
-            # define GP with SAAS prior
-            gp = SAASGP(
-                alpha=alpha,
-                num_warmup=num_warmup,
-                num_samples=num_samples,
-                max_tree_depth=6,
-                num_chains=1,
-                thinning=thinning,
-                verbose=False,
-                observation_variance=1e-6,
-                kernel=kernel,
-            )
 
-            # fit SAAS GP to training data
-            gp = gp.fit(X, train_Y)
-            self.mode_fit_time = time.process_time() - start
-            #print(f"GP fitting took {time.time() - start:.2f} seconds")
 
-            start = time.process_time()
-            # do EI optimization using LBFGS
-            x_next = optimize_ei(gp=gp, y_target=y_target, xi=0.0, num_restarts_ei=num_restarts_ei, num_init=5000)
-            self.acq_opt_time = time.process_time() - start
-            #print(f"Optimizing EI took {time.time() - start:.2f} seconds")
-        except Exception:
-            num_exceptions += 1
-            if num_exceptions <= max_exceptions:
-                print("WARNING: Exception was raised, using a random point.")
-                x_next = np.random.rand(len(lb))
-            else:
-                raise RuntimeException("ERROR: Maximum number of exceptions raised!")
+        # Initial queries are drawn from a Sobol sequence
+        with warnings.catch_warnings(record=True):  # suppress annoying qmc.Sobol UserWarning
+            X = qmc.Sobol(len(lb), scramble=True, seed=seed).random(num_init_evals)
 
-        # transform to original coordinates
-        y_next = f(lb + (ub - lb) * x_next)
+        Y = np.array([f(lb + (ub - lb) * x) for x in X])
 
-        X = np.vstack((X, deepcopy(x_next[None, :])))
-        Y = np.hstack((Y, deepcopy(y_next)))
+        print("Starting SAASBO optimization run.")
+        print(f"First {num_init_evals} queries drawn at random. Best minimum thus far: {Y.min().item():.3f}")
 
-        print(f"Observed function value: {y_next:.3f}, Best function value seen thus far: {Y.min():.3f}")
+        while len(Y) < max_evals:
+            print(f"=== Iteration {len(Y)} ===", flush=True)
+            # standardize training data
+            train_Y = (Y - Y.mean()) / Y.std()
+            y_target = train_Y.min().item()
 
-        del gp  # Free memory
+            # If for whatever reason we fail to return a query point above we choose one at random from the domain
+            try:
+                start = time.process_time()
+                # define GP with SAAS prior
+                gp = SAASGP(
+                    alpha=alpha,
+                    num_warmup=num_warmup,
+                    num_samples=num_samples,
+                    max_tree_depth=6,
+                    num_chains=1,
+                    thinning=thinning,
+                    verbose=False,
+                    observation_variance=1e-6,
+                    kernel=kernel,
+                )
 
-    return lb + (ub - lb) * X, Y
+                # fit SAAS GP to training data
+                gp = gp.fit(X, train_Y)
+                self.mode_fit_time = time.process_time() - start
+                #print(f"GP fitting took {time.time() - start:.2f} seconds")
+
+                start = time.process_time()
+                # do EI optimization using LBFGS
+                x_next = optimize_ei(gp=gp, y_target=y_target, xi=0.0, num_restarts_ei=num_restarts_ei, num_init=5000)
+                self.acq_opt_time = time.process_time() - start
+                #print(f"Optimizing EI took {time.time() - start:.2f} seconds")
+            except Exception:
+                num_exceptions += 1
+                if num_exceptions <= max_exceptions:
+                    print("WARNING: Exception was raised, using a random point.")
+                    x_next = np.random.rand(len(lb))
+                else:
+                    raise RuntimeException("ERROR: Maximum number of exceptions raised!")
+
+            # transform to original coordinates
+            y_next = f(lb + (ub - lb) * x_next)
+
+            X = np.vstack((X, deepcopy(x_next[None, :])))
+            Y = np.hstack((Y, deepcopy(y_next)))
+
+            print(f"Observed function value: {y_next:.3f}, Best function value seen thus far: {Y.min():.3f}")
+
+            del gp  # Free memory
+            self.cum_iteration_time = time.process_time()
+        return lb + (ub - lb) * X, Y
+
+
+
+
+# class SaasboWrapper1:
+#
+#     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
+#
+#         self.func = func
+#         self.dim = dim
+#         self.ub = ub
+#         self.lb = lb
+#         self.total_budget = total_budget
+#         self.Doe_size = DoE_size
+#         self.random_seed = random_seed
+#
+#
+#     def run(self):
+#
+#         run_saasbo(
+#             self.func,
+#             np.ones(self.dim) * self.ub,
+#             np.ones(self.dim) * self.lb,
+#             self.total_budget,
+#             self.Doe_size,
+#             self.random_seed,
+#             alpha=0.01,
+#             num_warmup=256,
+#             num_samples=256,
+#             thinning=32,
+#             device="cpu",
+#         )
+#
+#         self.acq_opt_time = acq_time
+#         self.mode_fit_time = mode_time
+
+
+

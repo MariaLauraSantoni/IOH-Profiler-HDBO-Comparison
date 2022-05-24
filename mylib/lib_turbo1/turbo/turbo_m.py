@@ -11,6 +11,7 @@
 
 import math
 import sys
+import time
 from copy import deepcopy
 
 import gpytorch
@@ -96,6 +97,10 @@ class TurboM(Turbo1):
         # Initialize parameters
         self._restart()
 
+        self.acq_opt_time = 0
+        self.mode_fit_time = 0
+        self.cum_iteration_time = 0
+
     def _restart(self):
         self._idx = np.zeros((0, 1), dtype=int)  # Track what trust region proposed what using an index vector
         self.failcount = np.zeros(self.n_trust_regions, dtype=int)
@@ -165,6 +170,7 @@ class TurboM(Turbo1):
             # Generate candidates from each TR
             X_cand = np.zeros((self.n_trust_regions, self.n_cand, self.dim))
             y_cand = np.inf * np.ones((self.n_trust_regions, self.n_cand, self.batch_size))
+            start = time.process_time()
             for i in range(self.n_trust_regions):
                 idx = np.where(self._idx == i)[0]  # Extract all "active" indices
 
@@ -179,13 +185,16 @@ class TurboM(Turbo1):
                 n_training_steps = 0 if self.hypers[i] else self.n_training_steps
 
                 # Create new candidates
+
                 X_cand[i, :, :], y_cand[i, :, :], self.hypers[i] = self._create_candidates(
                     X, fX, length=self.length[i], n_training_steps=n_training_steps, hypers=self.hypers[i]
                 )
-
+            self.mode_fit_time = time.process_time() - start
             # Select the next candidates
+            start = time.process_time()
             X_next, idx_next = self._select_candidates(X_cand, y_cand)
             assert X_next.min() >= 0.0 and X_next.max() <= 1.0
+            self.acq_opt_time = time.process_time() - start
 
             # Undo the warping
             X_next = from_unit_cube(X_next, self.lb, self.ub)
@@ -245,3 +254,4 @@ class TurboM(Turbo1):
                     self.fX = np.vstack((self.fX, fX_init))
                     self._idx = np.vstack((self._idx, i * np.ones((self.n_init, 1), dtype=int)))
                     self.n_evals += self.n_init
+        self.cum_iteration_time = time.process_time()

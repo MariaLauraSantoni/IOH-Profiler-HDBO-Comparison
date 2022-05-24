@@ -19,21 +19,43 @@ class SaasboWrapper:
         self.random_seed = random_seed
 
     def run(self):
-        from saasbo import run_saasbo
+        #from saasbo import run_saasbo, get_acq_time, get_mode_time
+        from saasbo import Saasbo
 
-        run_saasbo(
-            self.func,
-            np.ones(self.dim) * self.ub,
-            np.ones(self.dim) * self.lb,
-            self.total_budget,
-            self.Doe_size,
-            self.random_seed,
-            alpha=0.01,
-            num_warmup=256,
-            num_samples=256,
-            thinning=32,
-            device="cpu",
-        )
+
+        # run_saasbo(
+        #     self.func,
+        #     np.ones(self.dim) * self.ub,
+        #     np.ones(self.dim) * self.lb,
+        #     self.total_budget,
+        #     self.Doe_size,
+        #     self.random_seed,
+        #     alpha=0.01,
+        #     num_warmup=256,
+        #     num_samples=256,
+        #     thinning=32,
+        #     device="cpu",
+        # )
+
+        self.opt = Saasbo(func=self.func,
+                          dim=self.dim,
+                          ub=self.ub,
+                          lb=self.lb,
+                          total_budget=self.total_budget,
+                          DoE_size=self.Doe_size,
+                          random_seed=self.random_seed)
+
+        print(self.opt.run_saasbo(self.func,np.ones(self.dim) * self.ub,np.ones(self.dim) * self.lb,self.total_budget,self.Doe_size,self.random_seed,alpha=0.01,num_warmup=256,num_samples=256,thinning=32,device="cpu",))
+
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
+
 
 
 class BO_sklearnWrapper:
@@ -61,6 +83,14 @@ class BO_sklearnWrapper:
                     noise=0.1 ** 2,  # the noise level (optional)
                     random_state=self.random_seed)
 
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
 
 class BO_bayesoptimWrapper:
     # BO of Hao
@@ -172,7 +202,7 @@ class KPCABOWrapper:
         
 
         space = RealSpace([self.lb, self.ub], random_seed=self.random_seed) * self.dim
-        opt = KernelPCABO(
+        self.opt = KernelPCABO(
             search_space=space,
             obj_fun=self.func,
             DoE_size=self.Doe_size,
@@ -186,8 +216,16 @@ class KPCABOWrapper:
             random_seed=self.random_seed
         )
 
-        print(opt.run())
+        print(self.opt.run())
 
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
 
 
 class randomWrapper:
@@ -252,7 +290,7 @@ class linearPCABOWrapper:
         from bayes_optim.extension import PCABO, RealSpace
 
         space = RealSpace([self.lb, self.ub]) * self.dim
-        opt = PCABO(
+        self.opt = PCABO(
             search_space=space,
             obj_fun=self.func,
             DoE_size=self.Doe_size,
@@ -264,12 +302,16 @@ class linearPCABOWrapper:
             random_seed=self.random_seed
         )
         
-        print(opt.run())
-        print(opt.acq_opt_time)
-        print(opt.mode_fit_time)
-        self.acq_opt_time = opt.acq_opt_time
-        self.mode_fit_time = opt.mode_fit_time
+        print(self.opt.run())
 
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
 
 
 class turbo1Wrapper:
@@ -296,7 +338,7 @@ class turbo1Wrapper:
         import math
         import matplotlib
         import matplotlib.pyplot as plt
-        turbo1 = Turbo1(
+        self.opt = Turbo1(
             f=self.func,  # Handle to objective function
             lb=np.ones(self.dim) * self.lb,  # Numpy array specifying lower bounds
             ub=np.ones(self.dim) * self.ub,  # Numpy array specifying upper bounds
@@ -311,7 +353,16 @@ class turbo1Wrapper:
             device="cpu",  # "cpu" or "cuda"
             dtype="float64",  # float64 or float32
         )
-        turbo1.optimize()
+        self.opt.optimize()
+
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
 
 
 class turbomWrapper:
@@ -342,7 +393,7 @@ class turbomWrapper:
         #tr = math.floor(self.total_budget / self.Doe_size) - 1
         tr = 3
         n_init = math.floor(self.Doe_size/tr)
-        turbo_m = TurboM(
+        self.opt = TurboM(
             f=self.func,  # Handle to objective function
             lb=np.ones(self.dim) * self.lb,  # Numpy array specifying lower bounds
             ub=np.ones(self.dim) * self.ub,  # Numpy array specifying upper bounds
@@ -358,7 +409,16 @@ class turbomWrapper:
             device="cpu",  # "cpu" or "cuda"
             dtype="float64",  # float64 or float32
         )
-        turbo_m.optimize()
+        self.opt.optimize()
+
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
 
 class EBOWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
@@ -430,6 +490,15 @@ class EBOWrapper:
         e.run()
 
         print("elapsed time: ", time.time() - start)
+
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
 
 class EBO_BWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
@@ -503,6 +572,14 @@ class EBO_BWrapper:
 
         print("elapsed time: ", time.time() - start)
 
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
 
 
 
@@ -549,7 +626,7 @@ if __name__ == "__main__":
     doe_size = 3* dim
     seed = 0
     # Algorithm alternatives:
-    algorithm_name = "EBO"
+    algorithm_name = "linearPCABO"
 
     f = get_problem(21, dimension=dim, instance=1, problem_type='Real')
 
