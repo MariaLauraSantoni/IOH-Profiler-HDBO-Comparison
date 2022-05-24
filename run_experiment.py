@@ -13,7 +13,7 @@ from datetime import timedelta
 
 
 def decide_doe_size(dim):
-    return 3 * dim
+    return dim
 
 
 def decide_total_budget(dim, doe_size):

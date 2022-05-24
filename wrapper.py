@@ -485,9 +485,9 @@ class EBOWrapper:
                   'thresAzure': 1,  # if batch size > thresAzure, we use Azure
                   'save_file_name': 'tmp/tmp.pk',
                   }
-        e = ebo(f, options)
+        self.opt = ebo(f, options)
         start = time.time()
-        e.run()
+        self.opt.run()
 
         print("elapsed time: ", time.time() - start)
 
