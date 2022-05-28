@@ -20,7 +20,7 @@ import torch
 from .gp import train_gp
 from .turbo_1 import Turbo1
 from .utils import from_unit_cube, latin_hypercube, to_unit_cube
-
+import time
 
 class TurboM(Turbo1):
     """The TuRBO-m algorithm.
@@ -66,6 +66,9 @@ class TurboM(Turbo1):
         dtype="float64",
     ):
         self.n_trust_regions = n_trust_regions
+        self.acq_opt_time = 0
+        self.mode_fit_time = 0
+        self.cum_iteration_time = 0
         super().__init__(
             f=f,
             lb=lb,
@@ -165,6 +168,7 @@ class TurboM(Turbo1):
             # Generate candidates from each TR
             X_cand = np.zeros((self.n_trust_regions, self.n_cand, self.dim))
             y_cand = np.inf * np.ones((self.n_trust_regions, self.n_cand, self.batch_size))
+            start = time.process_time()
             for i in range(self.n_trust_regions):
                 idx = np.where(self._idx == i)[0]  # Extract all "active" indices
 
@@ -182,11 +186,12 @@ class TurboM(Turbo1):
                 X_cand[i, :, :], y_cand[i, :, :], self.hypers[i] = self._create_candidates(
                     X, fX, length=self.length[i], n_training_steps=n_training_steps, hypers=self.hypers[i]
                 )
-
+            self.mode_fit_time = time.process_time() - start
+            start = time.process_time()
             # Select the next candidates
             X_next, idx_next = self._select_candidates(X_cand, y_cand)
             assert X_next.min() >= 0.0 and X_next.max() <= 1.0
-
+            self.acq_opt_time = time.process_time() - start
             # Undo the warping
             X_next = from_unit_cube(X_next, self.lb, self.ub)
 
@@ -245,3 +250,4 @@ class TurboM(Turbo1):
                     self.fX = np.vstack((self.fX, fX_init))
                     self._idx = np.vstack((self._idx, i * np.ones((self.n_init, 1), dtype=int)))
                     self.n_evals += self.n_init
+                    self.cum_iteration_time = time.process_time()

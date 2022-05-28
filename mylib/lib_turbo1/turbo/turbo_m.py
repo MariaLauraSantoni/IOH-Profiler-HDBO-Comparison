@@ -67,6 +67,9 @@ class TurboM(Turbo1):
         dtype="float64",
     ):
         self.n_trust_regions = n_trust_regions
+        self.acq_opt_time = 0
+        self.mode_fit_time = 0
+        self.cum_iteration_time = 0
         super().__init__(
             f=f,
             lb=lb,
@@ -96,10 +99,6 @@ class TurboM(Turbo1):
 
         # Initialize parameters
         self._restart()
-
-        self.acq_opt_time = 0
-        self.mode_fit_time = 0
-        self.cum_iteration_time = 0
 
     def _restart(self):
         self._idx = np.zeros((0, 1), dtype=int)  # Track what trust region proposed what using an index vector
@@ -254,4 +253,8 @@ class TurboM(Turbo1):
                     self.fX = np.vstack((self.fX, fX_init))
                     self._idx = np.vstack((self._idx, i * np.ones((self.n_init, 1), dtype=int)))
                     self.n_evals += self.n_init
-        self.cum_iteration_time = time.process_time()
+
+            # Track time for the single iteration
+            self.cum_iteration_time = time.process_time()
+
+

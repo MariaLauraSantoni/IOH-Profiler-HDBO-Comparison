@@ -24,6 +24,9 @@ class ebo(object):
         check_valid_options(options)
         self.f = f
         self.options = options
+        self.acq_opt_time = 0
+        self.mode_fit_time = 0
+        self.cum_iteration_time = 0
         print(options)
         # initialization
         if 'X' in options and 'y' in options:
@@ -52,7 +55,10 @@ class ebo(object):
     def run(self):
         x_range, T, B, dim_limit, min_leaf_size, max_n_leaves, n_bo, n_top = self.get_params()
         tstart = self.X.shape[0] // B
+        #time1 = np.zeros(T)
+        #time2 = np.zeros(T)
         for t in range(tstart, T):
+            start1 = time.process_time()
             # breakpoint()
             # search space partition
             ref = self.y.min() if self.y.shape[0] > 0 else None
@@ -67,10 +73,13 @@ class ebo(object):
                           n in leaves]
 
             # run bo learning in parallel
+            start1 = time.process_time()
             start = time.time()
             res = self.pool.map(parameters, 'iter' + str(t))
             elapsed = time.time() - start
-
+            self.mode_fit_time = time.process_time() - start1
+            #mode_time = time.process_time() - start1
+            #time1[t] = mode_time
             self.timing.append((self.X.shape[0], elapsed))
             # allocate worker budget
             newX, newacf, z_all, k_all = zip(*res)
@@ -82,9 +91,11 @@ class ebo(object):
             # get newX
             newX = np.vstack(newX)
             newacf = np.hstack(newacf)
-
+            start2 = time.process_time()
             newX = self.choose_newX(newX, newacf, n_top, B)
-
+            self.acq_opt_time = time.process_time() - start2
+            #acq_time = time.process_time() - start2
+            #time2[t] = acq_time
             # map again to evaluate the selected inputs
             parameters = [[self.f, None, None, None, True, [x], self.options] for x in newX]
 
@@ -94,9 +105,12 @@ class ebo(object):
             self.y = np.vstack((self.y, newY))
 
             self.print_step(newX, t)
-
+            self.cum_iteration_time = time.process_time()
             # save
             #self.save()
+
+        #self.mode_fit_time = np.sum(time1)
+        #self.acq_opt_time = np.sum(time2)
 
         self.pause()
 

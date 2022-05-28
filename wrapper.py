@@ -60,8 +60,9 @@ class SaasboWrapper:
 
 class BO_sklearnWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
-        sys.path.append('./mylib/' + 'lib_' + "BO_sklearn")
-        print(sys.path)
+        import pathlib
+        my_dir = pathlib.Path(__file__).parent.resolve()
+        sys.path.append(os.path.join(my_dir, 'mylib', 'lib_BO_sklearn'))
 
         self.func = func
         self.dim = dim
@@ -72,9 +73,16 @@ class BO_sklearnWrapper:
         self.random_seed = random_seed
 
     def run(self):
-        from skopt import gp_minimize
+        from bosklearn import bosklearn
 
-        gp_minimize(self.func,  # the function to minimize
+        self.opt= bosklearn(func=self.func,
+                          dim=self.dim,
+                          ub=self.ub,
+                          lb=self.lb,
+                          total_budget=self.total_budget,
+                          DoE_size=self.Doe_size,
+                          random_seed=self.random_seed)
+        self.opt.gp_minimize(self.func,  # the function to minimize
                     # the bounds on each dimension of x
                     list((((self.lb, self.ub),) * self.dim)),
                     acq_func="EI",  # the acquisition function
@@ -373,7 +381,7 @@ class turbomWrapper:
         
         import pathlib
         my_dir = pathlib.Path(__file__).parent.resolve()
-        sys.path.append(os.path.join(my_dir, 'mylib', 'lib_turbom'))
+        sys.path.append(os.path.join(my_dir, 'mylib', 'lib_turbo1'))
         print(sys.path)
         
         self.func = func
@@ -391,7 +399,7 @@ class turbomWrapper:
         import matplotlib
         import matplotlib.pyplot as plt
         #tr = math.floor(self.total_budget / self.Doe_size) - 1
-        tr = 3
+        tr = int(self.dim/5)
         n_init = math.floor(self.Doe_size/tr)
         self.opt = TurboM(
             f=self.func,  # Handle to objective function
@@ -566,9 +574,9 @@ class EBO_BWrapper:
                   'thresAzure': 1,  # if batch size > thresAzure, we use Azure
                   'save_file_name': 'tmp/tmp.pk',
                   }
-        e = ebo(f, options)
+        self.opt = ebo(f, options)
         start = time.time()
-        e.run()
+        self.opt.run()
 
         print("elapsed time: ", time.time() - start)
 

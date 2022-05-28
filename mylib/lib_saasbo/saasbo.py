@@ -214,37 +214,7 @@ class Saasbo:
 
 
 
-# class SaasboWrapper1:
-#
-#     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
-#
-#         self.func = func
-#         self.dim = dim
-#         self.ub = ub
-#         self.lb = lb
-#         self.total_budget = total_budget
-#         self.Doe_size = DoE_size
-#         self.random_seed = random_seed
-#
-#
-#     def run(self):
-#
-#         run_saasbo(
-#             self.func,
-#             np.ones(self.dim) * self.ub,
-#             np.ones(self.dim) * self.lb,
-#             self.total_budget,
-#             self.Doe_size,
-#             self.random_seed,
-#             alpha=0.01,
-#             num_warmup=256,
-#             num_samples=256,
-#             thinning=32,
-#             device="cpu",
-#         )
-#
-#         self.acq_opt_time = acq_time
-#         self.mode_fit_time = mode_time
+
 
 
 

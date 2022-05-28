@@ -1,6 +1,6 @@
 {
-    "folder": "testlogf16i0dim10linearpcabo",
-    "optimizers": ["linearPCABO"],
+    "folder": "testlogf16i0dim10turbo1",
+    "optimizers": ["turbo1"],
     "fids": [16],
     "iids": [0],
     "dims": [10],
