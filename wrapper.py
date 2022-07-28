@@ -634,7 +634,7 @@ if __name__ == "__main__":
     doe_size = 3* dim
     seed = 0
     # Algorithm alternatives:
-    algorithm_name = "linearPCABO"
+    algorithm_name = "BO_sklearn"
 
     f = get_problem(21, dimension=dim, instance=1, problem_type='Real')
 

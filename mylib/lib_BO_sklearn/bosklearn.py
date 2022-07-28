@@ -2,7 +2,6 @@ import time
 import warnings
 import numpy as np
 from skopt import gp_minimize
-import numpy as np
 #import sys
 #sys.append()
 
@@ -17,7 +16,6 @@ import warnings
 import numbers
 import operator
 
-import numpy as np
 import scipy.sparse as sp
 from inspect import signature, isclass, Parameter
 
@@ -297,11 +295,8 @@ class bosklearn:
             base_estimator = cook_estimator(
                 "GP", space=space, random_state=rng.randint(0, np.iinfo(np.int32).max),
                 noise=noise)
-            # elif base_estimator = cook_estimator(
-            #     "RPA", space = space , random_state=rng.randint(0, np.iinfo(np.int32).max),
-            #     noise=noise)
 
-        return base_minimize(self,
+        return base_minimize(
             func, space, base_estimator=base_estimator,
             acq_func=acq_func,
             xi=xi, kappa=kappa, acq_optimizer=acq_optimizer, n_calls=n_calls,
@@ -311,5 +306,3 @@ class bosklearn:
             n_restarts_optimizer=n_restarts_optimizer,
             x0=x0, y0=y0, random_state=rng, verbose=verbose,
             callback=callback, n_jobs=n_jobs, model_queue_size=model_queue_size)
-
-
