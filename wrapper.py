@@ -3,6 +3,46 @@ import sys
 import os
 from ioh import get_problem
 
+class Py_CMA_ES_Wrapper:
+    def __init__(self, func, dim, ub, lb, total_budget, random_seed):
+        import pathlib
+        my_dir = pathlib.Path(__file__).parent.resolve()
+        bayes_bo_lib = os.path.join(
+            my_dir, 'mylib', 'lib_BO_bayesoptim', 'Bayesian-Optimization')
+        self.func = func
+        self.dim = dim
+        self.total_budget = total_budget
+        self.random_seed = random_seed
+        self.ub = ub
+        self.lb = lb
+
+    def run(self):
+        from bayes_optim import RandomForest, BO, GaussianProcess
+        import cma
+        from bayes_optim.extension import RealSpace
+        from bayes_optim.mylogging import eprintf
+
+        import random
+        space = RealSpace([self.lb, self.ub], random_seed=self.seed) * self.dim
+        ma = float('-inf')
+        argmax = None
+        for i in range(10*self.dim):
+            x = space.sample(1)[0]
+            f = row_function(x)
+            if f > ma:
+                ma = f
+                argmax = x
+        cma.fmin(self.func, x, 1., options={'bounds': [
+                 [self.lb]*self.dim, [self.ub]*self.dim], 'maxfevals': self.total_budget, 'seed': self.random_seed})
+
+        def get_acq_time(self):
+            return self.opt.acq_opt_time
+
+        def get_mode_time(self):
+            return self.opt.mode_fit_time
+
+        def get_iter_time(self):
+            return self.opt.cum_iteration_time
 
 class SaasboWrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
@@ -627,14 +667,17 @@ def marialaura(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, rando
     if optimizer_name == 'KPCABO':
         return KPCABOWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                              random_seed=random_seed)
+    if optimizer_name == 'pyCMA':
+        return Py_CMA_ES_Wrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget,
+                             random_seed=random_seed)
 
 if __name__ == "__main__":
-    dim = 10
-    total_budget = 150
-    doe_size = 3* dim
+    dim = 60
+    total_budget = 650
+    doe_size = dim
     seed = 0
     # Algorithm alternatives:
-    algorithm_name = "BO_sklearn"
+    algorithm_name = "pyCMA"
 
     f = get_problem(21, dimension=dim, instance=1, problem_type='Real')
 
