@@ -23,7 +23,7 @@ class Py_CMA_ES_Wrapper:
         from bayes_optim.mylogging import eprintf
 
         import random
-        space = RealSpace([self.lb, self.ub], random_seed=self.seed) * self.dim
+        space = RealSpace([self.lb, self.ub], random_seed=self.random_seed) * self.dim
         ma = float('-inf')
         argmax = None
         for i in range(10*self.dim):
