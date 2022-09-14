@@ -28,10 +28,6 @@ class Py_CMA_ES_Wrapper:
         argmax = None
         for i in range(10*self.dim):
             x = space.sample(1)[0]
-            f = row_function(x)
-            if f > ma:
-                ma = f
-                argmax = x
         cma.fmin(self.func, x, 1., options={'bounds': [
                  [self.lb]*self.dim, [self.ub]*self.dim], 'maxfevals': self.total_budget, 'seed': self.random_seed})
 
