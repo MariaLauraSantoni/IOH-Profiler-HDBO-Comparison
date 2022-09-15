@@ -308,6 +308,5 @@ class Turbo1:
                 # Append data to the global history
                 self.X = np.vstack((self.X, deepcopy(X_next)))
                 self.fX = np.vstack((self.fX, deepcopy(fX_next)))
-
-            # Track time for the single iteration
-            self.cum_iteration_time = time.process_time()
+                # Track time for the single iteration
+                self.cum_iteration_time = time.process_time()
