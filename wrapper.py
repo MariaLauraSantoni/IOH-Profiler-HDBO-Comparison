@@ -627,7 +627,7 @@ class EBO_BWrapper:
 
 
 
-def marialaura(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_seed):
+def wrap_opt(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_seed):
     ub = +5
     lb = -5
     if optimizer_name == "saasbo":
@@ -677,5 +677,5 @@ if __name__ == "__main__":
 
     f = get_problem(21, dimension=dim, instance=1, problem_type='Real')
 
-    opt = marialaura(algorithm_name, f, dim, total_budget, doe_size, seed)
+    opt = wrap_opt(algorithm_name, f, dim, total_budget, doe_size, seed)
     opt.run()

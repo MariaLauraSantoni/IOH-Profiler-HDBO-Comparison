@@ -10,10 +10,10 @@ class ExperimentEnvironment:
 #SBATCH --job-name=##folder##
 #SBATCH --array=0-##jobs_count##
 #SBATCH --clusters=serial
-#SBATCH --partition=serial_long
+#SBATCH --partition=serial_std
 #SBATCH --mem=2048MB
-#SBATCH --time=90:00:00
-#SBATCH --mail-user=marialaura.santoni@studenti.unicam.it
+#SBATCH --time=96:00:00
+#SBATCH --mail-user=youremail@domain.com
 #SBATCH --mail-type=END,FAIL
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
