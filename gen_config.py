@@ -13,7 +13,7 @@ class ExperimentEnvironment:
 #SBATCH --partition=serial_std
 #SBATCH --mem=2048MB
 #SBATCH --time=96:00:00
-#SBATCH --mail-user=youremail@domain.com
+#SBATCH --mail-user=your_email@domain.com
 #SBATCH --mail-type=END,FAIL
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4

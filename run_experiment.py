@@ -1,6 +1,6 @@
 from functools import partial
 import random
-from wrapper import wrap_opt
+from wrapper import wrapopt
 from my_logger import MyIOHFormatOnEveryEvaluationLogger, MyObjectiveFunctionWrapper
 import sys
 import os
@@ -41,7 +41,7 @@ class AlgorithmWrapper:
         func = partial(AlgorithmWrapper.__fitness_function_wrapper, f=f)
         doe_size = decide_doe_size(self.dim)
         total_budget = decide_total_budget(self.dim, doe_size)
-        self.opt = wrap_opt(
+        self.opt = wrapopt(
             optimizer_name, func, self.dim, total_budget, doe_size, self.seed)
         self.opt.run()
 
