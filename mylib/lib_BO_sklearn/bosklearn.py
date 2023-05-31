@@ -297,7 +297,7 @@ class bosklearn:
                 noise=noise)
 
         return base_minimize(
-            func, space, base_estimator=base_estimator,
+            self, func, space, base_estimator=base_estimator,
             acq_func=acq_func,
             xi=xi, kappa=kappa, acq_optimizer=acq_optimizer, n_calls=n_calls,
             n_points=n_points, n_random_starts=n_random_starts,
