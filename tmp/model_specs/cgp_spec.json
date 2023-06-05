@@ -1,8 +1,0 @@
-{
-  "kind": "cgp",
-  "model_kwargs": {
-    "num_ls_samples": 20
-  },
-  "train_kwargs": {
-  }
-}

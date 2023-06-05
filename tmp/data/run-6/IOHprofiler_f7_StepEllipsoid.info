@@ -1,3 +1,0 @@
-suite = "unknown_suite", funcId = 7, funcName = "StepEllipsoid", DIM = 10, maximization = "F", algId = "bayesian_optimization", algInfo = "test of IOHexperimenter in python"
-%
-data_f7_StepEllipsoid/IOHprofiler_f7_DIM10.dat, 1:3|589.051

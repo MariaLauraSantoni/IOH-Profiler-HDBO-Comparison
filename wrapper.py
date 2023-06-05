@@ -20,7 +20,6 @@ class Py_CMA_ES_Wrapper:
         from bayes_optim import RandomForest, BO, GaussianProcess
         import cma
         from bayes_optim.extension import RealSpace
-        from bayes_optim.mylogging import eprintf
 
         import random
         space = RealSpace([self.lb, self.ub], random_seed=self.random_seed) * self.dim
