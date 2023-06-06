@@ -24,7 +24,7 @@ The implementation of all task and algorithms and the experiments are performed 
 - my_logger.py defines all the functions needed to generate the files to store the data output by a run. It is called by run_experiment.py.
 - total_config.json allows defining the settings of the experiment and it has to be the argument of the file gen_config.py 
 - gen_config.py generates config file to run each algorithm with the parameters chosen in total_config.json given as an input.
-- mylib 
+- mylib contains one folder for each algorithm with all the classes and functions needed to run them.
 - Bayesian-Optimization.zip
 - sksparse.zip
 - skopt.zip 
