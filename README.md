@@ -44,7 +44,6 @@ To track correctly the CPU time this projects needs some modified modules and a 
 
 1. Unzip the folders skopt.zip, sksparse.zip and Bayesian-Optimization:
 ```
-### Unzip the folders
 unzip skopt.zip
 unzip sksparse.zip
 unzip Bayesian-Optimization.zip
