@@ -69,7 +69,6 @@ First of all the parameters of the experiment need to be decided in the file `to
 - `iids` is the number of the problem instance, in the paper 0, 1, and 2 are performed.
 - `dims` is the dimension of the problem.
 - `reps` is the number of run repetitions with the same settings but number of seeds. Inside the folder containing the results a `config` folder will be generated containing reps `.json` file, one for each repetitions. The number at the beginning of the `.json` file represents the number of seeds in the settings of that specific `.json` (ex. 0.json stores the settings for running an experiment using 0 seed).
-- `Bayesian-Optimization.zip` containes the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
 - `lb` and `ub` are the lower bound and the upper bound of the design domain. In the paper they are fixed at -5 and 5.
 - `extra` containes extra text informations to store in the result folder.
 
