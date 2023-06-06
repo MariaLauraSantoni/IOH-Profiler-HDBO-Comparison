@@ -60,8 +60,6 @@ mv sksparse "found_path_site_packages"
 4. Move Bayesian-Optimization to the right library inside the project:
 ```
 mv Bayesian-optimization mylib/lib_BO_bayesoptim
-
-
 ```
 
 
