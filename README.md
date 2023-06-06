@@ -84,7 +84,7 @@ Here, there is no need to adjust the settings to generate the batch script editi
 python gen_config.py total_config.json
 ```
 then, move to the folder `run_current_date_and_time` typing the first half of the last command line that will appear as screen output (the part before &&).
-To start the single run type the following command:
+A single run with a specific number of seeds (till reps-1) can be executed using the following command:
 ```
 python ../run_experiment.py config/number_of_seeds.json
 ```
