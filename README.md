@@ -28,6 +28,6 @@ The implementation of all task and algorithms and the experiments are performed 
 - Bayesian-Optimization.zip containes the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
 - sksparse.zip containes the module sksparse with little changes to track the CPU time for the algorithm EBO.
 - skopt.zip containes the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
-- requirements.txt 
+- requirements.txt contain the list of all the project’s dependencies with the specific version of each dependency.
 
 
