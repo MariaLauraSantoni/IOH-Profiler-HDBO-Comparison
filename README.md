@@ -23,11 +23,11 @@ The implementation of all task and algorithms and the experiments are performed 
 - wrapper.py contains the definition of all algorithms and the method wrapopt that  runs the main loop of the chosen algorithm. It is called by run_experiment.py.
 - my_logger.py defines all the functions needed to generate the files to store the data output by a run. It is called by run_experiment.py.
 - total_config.json allows defining the settings of the experiment and it has to be the argument of the file gen_config.py 
-- gen_config.py generates config file to run each algorithm with the parameters chosen in total_config.json given as an input.
+- gen_config.py generates config file to run each algorithm with the parameters chosen in total_config.json given as an input and a bash script to run experiments with Slurm.
 - mylib contains one folder for each algorithm with all the classes and functions needed to run them.
 - Bayesian-Optimization.zip containes the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
 - sksparse.zip containes the module sksparse with little changes to track the CPU time for the algorithm EBO.
 - skopt.zip containes the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
-- requirements.txt contain the list of all the project’s dependencies with the specific version of each dependency.
+- requirements.txt contains the list of all the project’s dependencies with the specific version of each dependency.
 
 
