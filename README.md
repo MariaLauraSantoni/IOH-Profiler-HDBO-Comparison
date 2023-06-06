@@ -61,5 +61,16 @@ mv sksparse "found_path_site_packages"
 ```
 mv Bayesian-optimization mylib/lib_BO_bayesoptim
 ```
-
+## Run from source
+First of all the parameters of the experiment need to be decided in the file `total_config.json`: 
+- `folder` is the name of the folder that will contain all the result data from the experiment.
+- `optimizers` is the name of the algorithm used during the experiment. It can be chosen among `BO_sklearn`, `pyCMA`, `saasbo`, `EBO`, `EBO_B`, `linearPCABO`, `KPCABO`, `turbo1` and `turbom`.
+- `fiids` defines which funcions the algorithm has to optimize. It can be a single number or multiple numbers deparated by comma in the range [1,24].
+- `total_config.json` allows defining the settings of the experiment and it has to be the argument of the file `gen_config.py`. 
+- `gen_config.py` generates config file to run each algorithm with the parameters chosen in `total_config.json` given as an input and a bash script to run experiments with Slurm.
+- `mylib` contains one folder for each algorithm with all the classes and functions needed to run them.
+- `Bayesian-Optimization.zip` containes the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
+- `sksparse.zip` containes the module sksparse with little changes to track the CPU time for the algorithm EBO.
+- `skopt.zip` containes the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
+- `requirements.txt` contains the li
 
