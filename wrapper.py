@@ -221,7 +221,7 @@ class KPCABOWrapper:
             my_dir, 'mylib', 'lib_BO_bayesoptim', 'Bayesian-Optimization')
         if not os.path.isdir(bayes_bo_lib):
             raise ImportError(
-                'No such module Bayesian-Optimization, please consider cloning this repository: https://github.com/wangronin/Bayesian-Optimization to the folder mylib/lib_BO_bayesoptim/')
+                'No such module Bayesian-Optimization, please unzip the folder Byesian-Optimization.zip and move the unzip folder to mylib/lib_BO_bayesoptim/')
         sys.path.insert(0, bayes_bo_lib)
         print(sys.path)
 
@@ -314,7 +314,7 @@ class linearPCABOWrapper:
             my_dir, 'mylib', 'lib_BO_bayesoptim', 'Bayesian-Optimization')
         if not os.path.isdir(bayes_bo_lib):
             raise ImportError(
-                'No such module Bayesian-Optimization, please consider cloning this repository: https://github.com/wangronin/Bayesian-Optimization to the folder mylib/lib_BO_bayesoptim/')
+                'No such module Bayesian-Optimization, please unzip the folder Byesian-Optimization.zip and move the unzip folder to mylib/lib_BO_bayesoptim/')
         sys.path.insert(0, bayes_bo_lib)
         print(sys.path)
         #sys.path.insert(0, bayes_bo_lib)
