@@ -19,21 +19,21 @@ This code compares these approaches on the 24 functions of the Black-Box Optimiz
 The implementation of all task and algorithms and the experiments are performed with Python 3.7.4 and all the libraries used are listed in requirements.txt.
 
 # Structure
-- run_experiment.py is the main file, used to run any experiments and initialises the main setting of the experiment, call the chosen algorithm and the write log files. It takes as argument a file json that is the output of the file gen_config.py.
-- wrapper.py contains the definition of all algorithms and the method wrapopt that  runs the main loop of the chosen algorithm. It is called by run_experiment.py.
-- my_logger.py defines all the functions needed to generate the files to store the data output by a run. It is called by run_experiment.py.
-- total_config.json allows defining the settings of the experiment and it has to be the argument of the file gen_config.py 
-- gen_config.py generates config file to run each algorithm with the parameters chosen in total_config.json given as an input and a bash script to run experiments with Slurm.
-- mylib contains one folder for each algorithm with all the classes and functions needed to run them.
-- Bayesian-Optimization.zip containes the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
-- sksparse.zip containes the module sksparse with little changes to track the CPU time for the algorithm EBO.
-- skopt.zip containes the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
-- requirements.txt contains the list of all the project’s dependencies with the specific version of each dependency.
+- `run_experiment.py` is the main file, used to run any experiments and initialises the main setting of the experiment, call the chosen algorithm and the write log files. It takes as argument a file json that is the output of the file `gen_config.py`.
+- `wrapper.py` contains the definition of all algorithms and the method `wrapopt` that runs the main loop of the chosen algorithm. It is called by `run_experiment.py`.
+- `my_logger.py` defines all the functions needed to generate the files to store the data output by a run. It is called by `run_experiment.py`.
+- `total_config.json` allows defining the settings of the experiment and it has to be the argument of the file `gen_config.py`. 
+- `gen_config.py` generates config file to run each algorithm with the parameters chosen in `total_config.json` given as an input and a bash script to run experiments with Slurm.
+- `mylib` contains one folder for each algorithm with all the classes and functions needed to run them.
+- `Bayesian-Optimization.zip` containes the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
+- `sksparse.zip` containes the module sksparse with little changes to track the CPU time for the algorithm EBO.
+- `skopt.zip` containes the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
+- `requirements.txt` contains the list of all the project’s dependencies with the specific version of each dependency.
 
 # Execution from source
 ## Dependencies to run form source
 
-Running this code from source requires Python 3.7.4, and the libraries given in requirements.txt (Warning: preferably use a virtual environment for this specific project, to avoid breaking the dependencies of your other projects). In Ubuntu, installing the dependencies can be done using the following command:
+Running this code from source requires Python 3.7.4, and the libraries given in `requirements.txt` (Warning: preferably use a virtual environment for this specific project, to avoid breaking the dependencies of your other projects). In Ubuntu, installing the dependencies can be done using the following command:
 
 ```
 pip install -r requirements.txt
@@ -42,7 +42,7 @@ pip install -r requirements.txt
 ## Specific modules to copy for tracking the CPU time in the log file
 To track correctly the CPU time this projects needs some modified modules and a modiefied cloned repository. Follow the steps below:
 
-1. Unzip the folders skopt.zip, sksparse.zip and Bayesian-Optimization:
+1. Unzip the folders `skopt.zip`, `sksparse.zip` and `Bayesian-Optimization.zip`:
 ```
 unzip skopt.zip
 unzip sksparse.zip
@@ -52,12 +52,12 @@ unzip Bayesian-Optimization.zip
 ```
 python -m site
 ```
-3. Move skopt and sksparse to the used Python site-packages directory:
+3. Move `skopt` and `sksparse` to the used Python site-packages directory:
 ```
 mv skopt "found_path_site_packages"
 mv sksparse "found_path_site_packages"
 ```
-4. Move Bayesian-Optimization to the right library inside the project:
+4. Move `Bayesian-Optimization` to the right library inside the project:
 ```
 mv Bayesian-optimization mylib/lib_BO_bayesoptim
 ```
