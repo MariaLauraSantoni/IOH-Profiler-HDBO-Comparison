@@ -31,7 +31,7 @@ The implementation of all task and algorithms and the experiments are performed 
 - `requirements.txt` contains the list of all the project’s dependencies with the specific version of each dependency.
 
 # Execution from source
-## Dependencies to run form source
+## Dependencies to run from source
 
 Running this code from source requires Python 3.7.4, and the libraries given in `requirements.txt` (Warning: preferably use a virtual environment for this specific project, to avoid breaking the dependencies of your other projects). In Ubuntu, installing the dependencies can be done using the following command:
 
