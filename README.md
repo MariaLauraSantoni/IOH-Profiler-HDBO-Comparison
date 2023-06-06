@@ -86,5 +86,5 @@ python gen_config.py total_config.json
 then, move to the folder `run_current_date_and_time` typing the first half of the last command line that will appear as screen output (the part before &&).
 To start the single run type the following command:
 ```
-../run_experiment.py config/number_of_seeds.json
+python ../run_experiment.py config/number_of_seeds.json
 ```
