@@ -25,9 +25,9 @@ The implementation of all task and algorithms and the experiments are performed 
 - `total_config.json` allows defining the settings of the experiment and it has to be the argument of the file `gen_config.py`. 
 - `gen_config.py` generates config file to run each algorithm with the parameters chosen in `total_config.json` given as an input and a bash script to run experiments with Slurm.
 - `mylib` contains one folder for each algorithm with all the classes and functions needed to run them.
-- `Bayesian-Optimization.zip` containes the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
-- `sksparse.zip` containes the module sksparse with little changes to track the CPU time for the algorithm EBO.
-- `skopt.zip` containes the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
+- `Bayesian-Optimization.zip` contains the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
+- `sksparse.zip` contains the module sksparse with little changes to track the CPU time for the algorithm EBO.
+- `skopt.zip` contains the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
 - `requirements.txt` contains the list of all the project’s dependencies with the specific version of each dependency.
 
 # Execution from source
@@ -63,14 +63,14 @@ mv Bayesian-optimization mylib/lib_BO_bayesoptim
 ```
 ## Run from source
 First of all the parameters of the experiment need to be decided in the file `total_config.json`: 
-- `folder` is the first part of name of the folders that will contain all the result data from the experiment. The number of the folders that will be generated to store the results are indicated in `reps`.
+- `folder` is the first part of name of the folders that will contain all the result data from the experiment. The number of the folders for each function indicated in `fiids` that will be generated to store the results are indicated in `reps`.
 - `optimizers` is the name of the algorithm used during the experiment. It can be chosen among `BO_sklearn`, `pyCMA`, `saasbo`, `EBO`, `EBO_B`, `linearPCABO`, `KPCABO`, `turbo1` and `turbom`.
 - `fiids` defines which funcions the algorithm has to optimize. It can be a single number or multiple numbers deparated by comma in the range of the 24 BBOB functions.
 - `iids` is the number of the problem instance, in the paper 0, 1, and 2 are performed.
 - `dims` is the dimension of the problem.
 - `reps` is the number of run repetitions with the same settings but number of seeds. Inside the folder containing the results a `config` folder will be generated containing reps-`.json` file, one for each repetitions. The number at the beginning of the `.json` file represents the number of seeds in the settings of that specific `.json` starting from 0 (ex. 0.json stores the settings for running an experiment using 0 seed). There it will be possible to perform experiments till reps-1 seed through the `.json` files.
 - `lb` and `ub` are the lower bound and the upper bound of the design domain. In the paper they are fixed at -5 and 5.
-- `extra` containes extra text informations to store in the result folder.
+- `extra` contains extra text informations to store in the result folder.
 ### Execute repetitions in parallel using a cluster
 If a job scheduling system for Linux clusters is available, the batch script can be edited inside the file `gen_config.py`. 
 After choosing the parameters and editing the batch script, a folder called `run_current_date_and_time` containing the folders with the result data and the `config` folder will be generated using the following command:
@@ -88,3 +88,7 @@ A single run with a specific number of seeds (till reps-1) can be executed using
 ```
 python ../run_experiment.py config/number_of_seeds.json
 ```
+## Analysis from source
+reps-folders for each function indicated in `fiids` with the first part of the name stored in `folder` inside the file `total_config.json` will be generated inside the folder `run_current_date_and_time`. Each of them contains a folder `data_number_and_name_of_the_function`
+
+
