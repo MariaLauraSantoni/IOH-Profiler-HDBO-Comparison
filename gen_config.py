@@ -5,7 +5,7 @@ import datetime
 
 
 class ExperimentEnvironment:
-    ELENA_SLURM_SCRIPT_TEMPLATE = '''#!/bin/bash
+    SLURM_SCRIPT_TEMPLATE = '''#!/bin/bash
 
 #SBATCH --job-name=##folder##
 #SBATCH --array=0-##jobs_count##
@@ -48,7 +48,7 @@ python ../run_experiment.py configs/${FILE_ID}.json
         self.__number_of_slurm_scripts = 0
         logs_out = os.path.join(self.logs_folder, '%A_%a.out')
         logs_err = os.path.join(self.logs_folder, '%A_%a.err')
-        script = ExperimentEnvironment.ELENA_SLURM_SCRIPT_TEMPLATE
+        script = ExperimentEnvironment.SLURM_SCRIPT_TEMPLATE
         script = script\
                 .replace('##folder##', self.result_folder_prefix)\
                 .replace('##logs_out##', logs_out)\
