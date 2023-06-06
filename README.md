@@ -89,6 +89,6 @@ A single run with a specific number of seeds (till reps-1) can be executed using
 python ../run_experiment.py config/number_of_seeds.json
 ```
 ## Analysis from source
-reps-folders for each function indicated in `fiids` with the first part of the name stored in `folder` inside the file `total_config.json` will be generated inside the folder `run_current_date_and_time`. Each of them contains a folder `data_number_and_name_of_the_function`
+reps-folders for each function indicated in `fiids` with the first part of the name stored in `folder` inside the file `total_config.json` will be generated inside the folder `run_current_date_and_time`. Each of them contains a folder `data_number_and_name_of_the_function` that store a `.dat` file with all the results about the loss and the different CPU times tracked (the loss examinated in the paper is stored under the name `best-so-far f(x)`).
 
 
