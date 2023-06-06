@@ -1,5 +1,6 @@
 # Comparison of High-Dimensional Bayesian Optimization Algorithms on BBOB
 This repository contains the code associated with Comparison of High-Dimensional Bayesian Optimization Algorithms on BBOB.
+
 It proposes a modular algorithm framework to make the implementation of several algorithms compared within the paper compatible
 via [IOHprofiler](https://iohprofiler.github.io/), and appropriate code to store all the data obtained.
 The selected algorithms are: 
@@ -10,3 +11,11 @@ The selected algorithms are:
 - PCA-BO proposed in [High Dimensional Bayesian Optimization Assisted by Principal Component Analysis](https://arxiv.org/pdf/2007.00925.pdf).
 - KPCA-BO introduced in [High Dimensional Bayesian Optimization with Kernel Principal Component Analysis](https://arxiv.org/pdf/2204.13753.pdf).
 - TuRBO from [Scalable Global Optimization via Local Bayesian Optimization](https://proceedings.neurips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf).
+
+This code compares these approaches on the 24 functions of the Black-Box Optimization Benchmarking (BBOB) suite from the [COCO](https://arxiv.org/pdf/1603.08785.pdf) benchmarking environment suite using their definition from [IOHprofiler](https://iohprofiler.github.io/). It is based on the original repositories and modules of the selected algorithms [Vanilla Bayesian Optimization](https://scikit-optimize.github.io/stable/auto_examples/bayesian-optimization.html), [CMA-ES](https://github.com/CMA-ES/pycma), [SAASBO](https://github.com/martinjankowiak/saasbo), [EBO](https://github.com/zi-w/Ensemble-Bayesian-Optimization), [PCA-BO](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO), [KPCA-BO](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) and [TuRBO](https://github.com/uber-research/TuRBO). We provide all the python files to run the paper experiments and to store the result in data files.
+
+# Libraries and dependencies
+
+The implementation of all task and algorithms and the experiments are performed with Python 3.7.4 and all the libraries used are listed in requirements.txt.
+
+# Structure
