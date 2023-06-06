@@ -63,14 +63,13 @@ mv Bayesian-optimization mylib/lib_BO_bayesoptim
 ```
 ## Run from source
 First of all the parameters of the experiment need to be decided in the file `total_config.json`: 
-- `folder` is the name of the folder that will contain all the result data from the experiment.
+- `folder` is the first part of name of the folders that will contain all the result data from the experiment. The number of the folders that will be generated to store the results are indicated in `reps`.
 - `optimizers` is the name of the algorithm used during the experiment. It can be chosen among `BO_sklearn`, `pyCMA`, `saasbo`, `EBO`, `EBO_B`, `linearPCABO`, `KPCABO`, `turbo1` and `turbom`.
-- `fiids` defines which funcions the algorithm has to optimize. It can be a single number or multiple numbers deparated by comma in the range [1,24].
-- `total_config.json` allows defining the settings of the experiment and it has to be the argument of the file `gen_config.py`. 
-- `gen_config.py` generates config file to run each algorithm with the parameters chosen in `total_config.json` given as an input and a bash script to run experiments with Slurm.
-- `mylib` contains one folder for each algorithm with all the classes and functions needed to run them.
+- `fiids` defines which funcions the algorithm has to optimize. It can be a single number or multiple numbers deparated by comma in the range of the 24 BBOB functions.
+- `iids` is the number of the problem instance, in the paper 0, 1, and 2 are performed.
+- `dims` is the dimension of the problem.
+- `reps` is the number of run repetitions with the same settings but number of seeds. Inside the folder containing the results a `config` folder will be generated containing reps `.json` file, one for each repetitions. The number at the beginning of the `.json` file represents the number of seeds in the settings of that specific `.json` (ex. 0.json stores the settings for running an experiment using 0 seed).
 - `Bayesian-Optimization.zip` containes the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
-- `sksparse.zip` containes the module sksparse with little changes to track the CPU time for the algorithm EBO.
-- `skopt.zip` containes the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
-- `requirements.txt` contains the li
+- `lb` and `ub` are the lower bound and the upper bound of the design domain. In the paper they are fixed at -5 and 5.
+- `extra` containes extra text informations to store in the result folder.
 
