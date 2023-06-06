@@ -19,3 +19,15 @@ This code compares these approaches on the 24 functions of the Black-Box Optimiz
 The implementation of all task and algorithms and the experiments are performed with Python 3.7.4 and all the libraries used are listed in requirements.txt.
 
 # Structure
+- run_experiment.py is the main file, used to run any experiments and initialises the main setting of the experiment, call the chosen algorithm and the write log files.
+- wrapper.py contains the definition of all algorithms and the method wrapopt that  runs the main loop of the chosen algorithm. It is called by run_experiment.py.
+- my_logger.py defines all the functions needed to generate the files to store the data output by a run. It is called by run_experiment.py.
+- total_config.json
+- gen_config.py
+- mylib
+- Bayesian-Optimization.zip
+- sksparse.zip
+- skopt.zip 
+- requirements.txt
+
+
