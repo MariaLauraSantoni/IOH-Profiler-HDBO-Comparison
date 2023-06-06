@@ -25,9 +25,9 @@ The implementation of all task and algorithms and the experiments are performed 
 - total_config.json allows defining the settings of the experiment and it has to be the argument of the file gen_config.py 
 - gen_config.py generates config file to run each algorithm with the parameters chosen in total_config.json given as an input.
 - mylib contains one folder for each algorithm with all the classes and functions needed to run them.
-- Bayesian-Optimization.zip
-- sksparse.zip
-- skopt.zip 
-- requirements.txt
+- Bayesian-Optimization.zip containes the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
+- sksparse.zip containes the module sksparse with little changes to track the CPU time for the algorithm EBO.
+- skopt.zip containes the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
+- requirements.txt 
 
 
