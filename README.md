@@ -30,4 +30,39 @@ The implementation of all task and algorithms and the experiments are performed 
 - skopt.zip containes the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
 - requirements.txt contains the list of all the project’s dependencies with the specific version of each dependency.
 
+# Execution from source
+## Dependencies to run form source
+
+Running this code from source requires Python 3.7.4, and the libraries given in requirements.txt (Warning: preferably use a virtual environment for this specific project, to avoid breaking the dependencies of your other projects). In Ubuntu, installing the dependencies can be done using the following command:
+
+```
+pip install -r requirements.txt
+```
+
+## Specific modules to copy for tracking the CPU time in the log file
+To track correctly the CPU time this projects needs some modified modules and a modiefied cloned repository. Follow the steps below:
+
+1. Unzip the folders skopt.zip, sksparse.zip and Bayesian-Optimization:
+```
+### Unzip the folders
+unzip skopt.zip
+unzip sksparse.zip
+unzip Bayesian-Optimization.zip
+```
+2. Find the path of the used python site-packages directory
+```
+python -m site
+```
+3. Move skopt and sksparse to the used Python site-packages directory:
+```
+mv skopt "found_path_site_packages"
+mv sksparse "found_path_site_packages"
+```
+4. Move Bayesian-Optimization to the right library inside the project:
+```
+mv Bayesian-optimization mylib/lib_BO_bayesoptim
+
+
+```
+
 
