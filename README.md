@@ -16,7 +16,7 @@ This code compares these approaches on the 24 functions of the Black-Box Optimiz
 
 # Libraries and dependencies
 
-The implementation of all task and algorithms and the experiments are performed with Python 3.7.4 and all the libraries used are listed in requirements.txt.
+The implementation of all task and algorithms to perform experiments are in Python 3.7.4 and all the libraries used are listed in `requirements.txt`.
 
 # Structure
 - `run_experiment.py` is the main file, used to run any experiments and initialises the main setting of the experiment, call the chosen algorithm and the write log files. It takes as argument a file json that is the output of the file `gen_config.py`.
