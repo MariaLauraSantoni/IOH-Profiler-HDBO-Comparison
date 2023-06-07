@@ -40,7 +40,7 @@ pip install -r requirements.txt
 ```
 
 ## Specific modules to copy for tracking the CPU time in the log file
-To track correctly the CPU time this projects needs some modified modules and a modiefied cloned repository. Follow the steps below:
+To correctly track the CPU time this project needs some modified modules and a modiefied cloned repository. Follow the steps below:
 
 1. Unzip the folders `skopt.zip`, `sksparse.zip` and `Bayesian-Optimization.zip`:
 ```
