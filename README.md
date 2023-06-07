@@ -48,7 +48,7 @@ unzip skopt.zip
 unzip sksparse.zip
 unzip Bayesian-Optimization.zip
 ```
-2. Find the path of the used python site-packages directory
+2. Find the path of the used python site-packages directory:
 ```
 python -m site
 ```
