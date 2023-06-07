@@ -68,7 +68,7 @@ First of all, the parameters of the experiment need to be decided in the file `t
 - `fiids` defines which funcions the algorithm has to optimize. It can be a single number or multiple numbers deparated by comma in the range of the 24 BBOB functions.
 - `iids` is the number of the problem instance, in the paper 0, 1, and 2 are performed.
 - `dims` is the dimension of the problem.
-- `reps` is the number of run repetitions with the same settings but number of seeds. Inside the folder containing the results a `config` folder will be generated containing reps-`.json` file, one for each repetitions. The number at the beginning of the `.json` file represents the number of seeds in the settings of that specific `.json` starting from 0 (ex. 0.json stores the settings for running an experiment using 0 seed). There it will be possible to perform experiments till reps-1 seed through the `.json` files.
+- `reps` is the number of run repetitions with the same settings but number of seeds. Inside the folder containing results a `config` folder will be generated containing reps-`.json` file, one for each repetitions. The number at the beginning of the `.json` file represents the number of seeds in the settings of that specific `.json` starting from 0 (ex. 0.json stores the settings for running an experiment using 0 seed). Therefore it will be possible to perform experiments till reps-1 seeds through the `.json` files.
 - `lb` and `ub` are the lower bound and the upper bound of the design domain. In the paper they are fixed at -5 and 5.
 - `extra` contains extra text informations to store in the result folder.
 ### Execute repetitions in parallel using a cluster
