@@ -19,11 +19,11 @@ This code compares these approaches on the 24 functions of the Black-Box Optimiz
 The implementation of all task and algorithms to perform experiments are in Python 3.7.4 and all the libraries used are listed in `requirements.txt`.
 
 # Structure
-- `run_experiment.py` is the main file, used to run any experiments and initialises the main setting of the experiment, call the chosen algorithm and the write log files. It takes as argument a file json that is the output of the file `gen_config.py`.
+- `run_experiment.py` is the main file, used to run any experiments. It initialises the main setting of the experiment, calls the chosen algorithm and writes log files. It takes as argument a file `.json` that is the output of the file `gen_config.py`.
 - `wrapper.py` contains the definition of all algorithms and the method `wrapopt` that runs the main loop of the chosen algorithm. It is called by `run_experiment.py`.
-- `my_logger.py` defines all the functions needed to generate the files to store the data output by a run. It is called by `run_experiment.py`.
+- `my_logger.py` defines all the functions needed to generate the files to store data output by a run. It is called by `run_experiment.py`.
 - `total_config.json` allows defining the settings of the experiment and it has to be the argument of the file `gen_config.py`. 
-- `gen_config.py` generates config file to run each algorithm with the parameters chosen in `total_config.json` given as an input and a bash script to run experiments with Slurm.
+- `gen_config.py` generates a folder called `config` containing files to run each algorithm with the parameters chosen in `total_config.json` given as an input and a bash script to run experiments with Slurm.
 - `mylib` contains one folder for each algorithm with all the classes and functions needed to run them.
 - `Bayesian-Optimization.zip` contains the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
 - `sksparse.zip` contains the module sksparse with little changes to track the CPU time for the algorithm EBO.
