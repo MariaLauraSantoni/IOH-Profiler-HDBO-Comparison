@@ -62,7 +62,7 @@ mv sksparse "found_path_site_packages"
 mv Bayesian-optimization mylib/lib_BO_bayesoptim
 ```
 ## Run from source
-First of all the parameters of the experiment need to be decided in the file `total_config.json`: 
+First of all, the parameters of the experiment need to be decided in the file `total_config.json`: 
 - `folder` is the first part of name of the folders that will contain all the result data from the experiment. The number of the folders for each function indicated in `fiids` that will be generated to store the results are indicated in `reps`.
 - `optimizers` is the name of the algorithm used during the experiment. It can be chosen among `BO_sklearn`, `pyCMA`, `saasbo`, `EBO`, `EBO_B`, `linearPCABO`, `KPCABO`, `turbo1` and `turbom`.
 - `fiids` defines which funcions the algorithm has to optimize. It can be a single number or multiple numbers deparated by comma in the range of the 24 BBOB functions.
