@@ -73,7 +73,7 @@ First of all, the parameters of the experiment need to be decided in the file `t
 - `extra` contains extra text informations to store in the result folder.
 ### Execute repetitions in parallel using a cluster
 If a job scheduling system for Linux clusters is available, the batch script can be edited inside the file `gen_config.py`. 
-After choosing the parameters and editing the batch script, a folder called `run_current_date_and_time` containing the folders with the result data and the `config` folder will be generated using the following command:
+After choosing the parameters and editing the batch script, a folder called `run_current_date_and_time` containing folders with the result data and the `config` folder will be generated using the following command:
 ```
 python gen_config.py total_config.json
 ```
