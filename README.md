@@ -1,5 +1,5 @@
 # Comparison of High-Dimensional Bayesian Optimization Algorithms on BBOB
-This repository contains the code used to generate the results in the paper [Comparison of High-Dimensional Bayesian Optimization Algorithms on BBOB].
+This repository contains the code used to generate the results in the paper Comparison of High-Dimensional Bayesian Optimization Algorithms on BBOB.
 
 It proposes a modular algorithm framework to make the implementation of several algorithms compared within the paper compatible
 via [IOHprofiler](https://iohprofiler.github.io/), and appropriate code to store all the data obtained.
