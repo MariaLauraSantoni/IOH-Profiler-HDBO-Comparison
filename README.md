@@ -59,7 +59,7 @@ mv sksparse "found_path_site_packages"
 ```
 4. Move `Bayesian-Optimization` to the right library inside the project:
 ```
-mv Bayesian-optimization mylib/lib_BO_bayesoptim
+mv Bayesian-Optimization mylib/lib_BO_bayesoptim
 ```
 ## Run from source
 First of all the parameters of the experiment need to be decided in the file `total_config.json`: 
