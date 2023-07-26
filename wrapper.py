@@ -625,6 +625,56 @@ class EBO_BWrapper:
         return self.opt.cum_iteration_time
 
 
+class trPCABOWrapper:
+    def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
+        # import sys
+        # sys.path.append('./mylib/' + 'lib_' + "turbo1")
+        # print(sys.path)
+        import pathlib
+        my_dir = pathlib.Path(__file__).parent.resolve()
+        sys.path.append(os.path.join(my_dir, 'mylib', 'lib_trPCABO'))
+        print(sys.path)
+
+        self.func = func
+        self.dim = dim
+        self.ub = ub
+        self.lb = lb
+        self.total_budget = total_budget
+        self.Doe_size = DoE_size
+        self.random_seed = random_seed
+
+    def run(self):
+        from turbo import trPCABO
+        import torch
+        import math
+        import matplotlib
+        import matplotlib.pyplot as plt
+        self.opt = trPCABO(
+            f=self.func,  # Handle to objective function
+            lb=np.ones(self.dim) * self.lb,  # Numpy array specifying lower bounds
+            ub=np.ones(self.dim) * self.ub,  # Numpy array specifying upper bounds
+            n_init=self.Doe_size,  # Number of initial bounds from an Latin hypercube design
+            max_evals=self.total_budget,  # Maximum number of evaluations
+            batch_size=5,  # How large batch size TuRBO uses
+            verbose=True,  # Print information from each batch
+            use_ard=True,  # Set to true if you want to use ARD for the GP kernel
+            max_cholesky_size=2000,  # When we switch from Cholesky to Lanczos
+            n_training_steps=50,  # Number of steps of ADAM to learn the hypers
+            min_cuda=1024,  # Run on the CPU for small datasets
+            device="cpu",  # "cpu" or "cuda"
+            dtype="float64",  # float64 or float32
+        )
+        self.opt.optimize()
+
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
+
 
 def wrapopt(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_seed):
     ub = +5
@@ -665,6 +715,9 @@ def wrapopt(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_s
     if optimizer_name == 'pyCMA':
         return Py_CMA_ES_Wrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget,
                              random_seed=random_seed)
+    if optimizer_name == 'trPCABO':
+        return trPCABOWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+                             random_seed=random_seed)
 
 if __name__ == "__main__":
     dim = 60
@@ -672,7 +725,7 @@ if __name__ == "__main__":
     doe_size = dim
     seed = 0
     # Algorithm alternatives:
-    algorithm_name = "pyCMA"
+    algorithm_name = "trPCABO"
 
     f = get_problem(21, dimension=dim, instance=1, problem_type='Real')
 
