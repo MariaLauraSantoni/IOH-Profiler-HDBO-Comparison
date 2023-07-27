@@ -154,11 +154,11 @@ class trPCABO:
             self.length /= 2.0
             self.failcount = 0
 
-    def _create_candidates(self, X, fX, length, n_training_steps, hypers):
+    def _create_candidates(self, X, fX, X_tr, length, n_training_steps, hypers, hypers1):
         """Generate candidates assuming X has been scaled to [0,1]^d."""
         # Pick the center as the point with the smallest function values
         # NOTE: This may not be robust to noise, in which case the posterior mean of the GP can be used instead
-        #assert X.min() >= 0.0 and X.max() <= 1.0
+        assert X.min() >= 0.0 and X.max() <= 1.0
 
         # Standardize function values.
         mu, sigma = np.median(fX), fX.std()
@@ -181,21 +181,25 @@ class trPCABO:
         #X_tr_n = to_unit_cube(deepcopy(X_tr), bounds[0], bounds[1])
         #X_tr_n = to_unit_cube(deepcopy(X_tr), bounds[0], bounds[1])
 
-
         # We use CG + Lanczos for training if we have enough data
         with gpytorch.settings.max_cholesky_size(self.max_cholesky_size):
+            X_torch_tr = torch.tensor(X_tr).to(device=device, dtype=dtype)
             X_torch = torch.tensor(X).to(device=device, dtype=dtype)
             y_torch = torch.tensor(fX).to(device=device, dtype=dtype)
             gp = train_gp(
-                train_x=X_torch, train_y=y_torch, use_ard=self.use_ard, num_steps=n_training_steps, hypers=hypers
+                train_x=X_torch_tr, train_y=y_torch, use_ard=self.use_ard, num_steps=n_training_steps, hypers=hypers
             )
 
             # Save state dict
             hypers = gp.state_dict()
 
+            gp1 = train_gp(
+                train_x=X_torch, train_y=y_torch, use_ard=self.use_ard, num_steps=n_training_steps, hypers=hypers1
+            )
+            hypers1 = gp1.state_dict()
         # Create the trust region boundaries
         x_center = X[fX.argmin().item(), :][None, :]
-        weights = gp.covar_module.base_kernel.lengthscale.cpu().detach().numpy().ravel()
+        weights = gp1.covar_module.base_kernel.lengthscale.cpu().detach().numpy().ravel()
         weights = weights / weights.mean()  # This will make the next line more stable
         weights = weights / np.prod(np.power(weights, 1.0 / len(weights)))  # We now have weights.prod() = 1
         lb = np.clip(x_center - weights * length / 2.0, 0.0, 1.0)
@@ -205,19 +209,22 @@ class trPCABO:
 
         # Draw a Sobolev sequence in [lb, ub]
         seed = np.random.randint(int(1e6))
-        sobol = SobolEngine(self.new_dim, scramble=True, seed=seed)
+        sobol = SobolEngine(self.dim, scramble=True, seed=seed)
         pert = sobol.draw(self.n_cand).to(dtype=dtype, device=device).cpu().detach().numpy()
         pert = lb + (ub - lb) * pert
         ##Sono arrivata qui
         # Create a perturbation mask
-        prob_perturb = min(20.0 / self.new_dim, 1.0)
-        mask = np.random.rand(self.n_cand, self.new_dim) <= prob_perturb
+        prob_perturb = min(20.0 / self.dim, 1.0)
+        mask = np.random.rand(self.n_cand, self.dim) <= prob_perturb
         ind = np.where(np.sum(mask, axis=1) == 0)[0]
-        mask[ind, np.random.randint(0, self.new_dim - 1, size=len(ind))] = 1
+        mask[ind, np.random.randint(0, self.dim - 1, size=len(ind))] = 1
 
         # Create candidate points
-        X_cand = x_center.copy() * np.ones((self.n_cand, self.new_dim))
+        X_cand = x_center.copy() * np.ones((self.n_cand, self.dim))
         X_cand[mask] = pert[mask]
+        X_cand_tr = from_unit_cube(X_cand, self.lb, self.ub)
+        X_cand_tr = self._pca.transform(X_cand_tr)
+        X_cand_tr = to_unit_cube(deepcopy(X_tr), self.bounds[0], self.bounds[1])
 
         # Figure out what device we are running on
         if len(X_cand) < self.min_cuda:
@@ -231,23 +238,25 @@ class trPCABO:
         # We use Lanczos for sampling if we have enough data
         with torch.no_grad(), gpytorch.settings.max_cholesky_size(self.max_cholesky_size):
             X_cand_torch = torch.tensor(X_cand).to(device=device, dtype=dtype)
-            y_cand = gp.likelihood(gp(X_cand_torch)).sample(torch.Size([self.batch_size])).t().cpu().detach().numpy()
-
+            X_cand_torch_tr = torch.tensor(X_cand_tr).to(device=device, dtype=dtype)
+            y_cand = gp1.likelihood(gp1(X_cand_torch)).sample(torch.Size([self.batch_size])).t().cpu().detach().numpy()
+            y_cand_tr = gp.likelihood(gp(X_cand_torch_tr)).sample(torch.Size([self.batch_size])).t().cpu().detach().numpy()
         # Remove the torch variables
-        del X_torch, y_torch, X_cand_torch, gp
+        del X_torch, y_torch, X_cand_torch, gp , X_torch_tr, X_cand_torch_tr, gp1
 
         # De-standardize the sampled values
         y_cand = mu + sigma * y_cand
+        y_cand_tr = mu + sigma * y_cand_tr
 
-        return X_cand, y_cand, hypers
+        return X_cand_tr, y_cand_tr, hypers
 
-    def _select_candidates(self, X_cand, y_cand):
+    def _select_candidates(self, X_cand_tr, y_cand_tr):
         """Select candidates."""
         X_next = np.ones((self.batch_size, self.new_dim))
         for i in range(self.batch_size):            # Pick the best point and make sure we never pick it again
-            indbest = np.argmin(y_cand[:, i])
-            X_next[i, :] = deepcopy(X_cand[indbest, :])
-            y_cand[indbest, :] = np.inf
+            indbest = np.argmin(y_cand_tr[:, i])
+            X_next[i, :] = deepcopy(X_cand_tr[indbest, :])
+            y_cand_tr[indbest, :] = np.inf
         #X_next = self._pca.inverse_transform(X_next)
         return X_next
 
@@ -286,27 +295,28 @@ class trPCABO:
             while self.n_evals < self.max_evals and self.length >= self.length_min:
                 # Warp inputs
                 self._pca = LinearTransform(n_components=0.9, svd_solver="full", minimize=True)
-                X = self._pca.fit_transform(self._X, self._fX)
-                self.new_dim = X.shape[1]
+                X_tr = self._pca.fit_transform(self._X, self._fX)
+                self.new_dim = X_tr.shape[1]
                 #bounds = self._pca.transform([np.zeros(self.dim), np.ones(self.dim)])
-                bounds = self._pca.transform([np.array(self.dim * self.lb), np.array(self.dim * self.ub)])
-                X = to_unit_cube(deepcopy(X), bounds[0], bounds[1]) #ora li porto in 0 1
+                self.bounds = self._pca.transform([np.array(self.dim * self.lb), np.array(self.dim * self.ub)])
+                X_tr = to_unit_cube(deepcopy(X_tr), self.bounds[0], self.bounds[1]) #ora li porto in 0 1
+                X = to_unit_cube(deepcopy(self._X), self.lb, self.ub) #ora li porto in 0 1
 
                 # Standardize values
                 fX = deepcopy(self._fX).ravel()
 
                 # Create th next batch
                 start = time.process_time()
-                X_cand, y_cand, _ = self._create_candidates(
-                    X, fX, length=self.length, n_training_steps=self.n_training_steps, hypers={}
+                X_cand_tr, y_cand_tr, _ = self._create_candidates(
+                    X, fX, X_tr, length=self.length, n_training_steps=self.n_training_steps, hypers={}, hypers1={}
                 )
                 self.mode_fit_time = time.process_time() - start
 
                 start = time.process_time()
-                X_next = self._select_candidates(X_cand, y_cand)
+                X_next = self._select_candidates(X_cand_tr, y_cand_tr)
                 self.acq_opt_time = time.process_time() - start
                 # Undo the warping and the trasformation
-                X_next = from_unit_cube(X_next, bounds[0], bounds[1])
+                X_next = from_unit_cube(X_next, self.bounds[0], self.bounds[1])
                 X_next = self._pca.inverse_transform(X_next)
                 # Evaluate batch
                 fX_next = np.array([[self.f(x)] for x in X_next])
