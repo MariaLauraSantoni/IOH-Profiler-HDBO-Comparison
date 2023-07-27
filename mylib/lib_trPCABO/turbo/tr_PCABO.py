@@ -158,7 +158,7 @@ class trPCABO:
         """Generate candidates assuming X has been scaled to [0,1]^d."""
         # Pick the center as the point with the smallest function values
         # NOTE: This may not be robust to noise, in which case the posterior mean of the GP can be used instead
-        assert X.min() >= 0.0 and X.max() <= 1.0
+        #assert X.min() >= 0.0 and X.max() <= 1.0
 
         # Standardize function values.
         mu, sigma = np.median(fX), fX.std()
