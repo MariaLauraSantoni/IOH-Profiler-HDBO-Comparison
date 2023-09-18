@@ -285,22 +285,35 @@ class randomWrapper:
     def run(self):
         import ioh
 
-        def random_search(problem: ioh.problem.Real, seed: int = 42, budget: int = None) -> ioh.RealSolution:
-            np.random.seed(seed)
+        def random_search(func, search_space, budget):
+            """
+               Implementa la ricerca casuale per minimizzare un problema di dimensione n.
 
-            if budget is None:
-                budget = int(problem.meta_data.n_variables * 1e4)
+               Parameters:
+               - objective_function: La funzione obiettivo da minimizzare. Deve accettare un vettore di dimensione n come input e restituire un valore numerico.
+               - search_space: Una lista di tuple, ognuna contenente il range di valori ammissibili per ciascuna dimensione.
+               - budget: Il numero massimo di valutazioni della funzione obiettivo consentite.
+
+               Returns:
+               - best_solution: La migliore soluzione trovata.
+               - best_score: Il valore minimo della funzione obiettivo associato alla migliore soluzione.
+               """
+            best_solution = None
+            best_score = float('inf')
 
             for _ in range(budget):
-                x = np.random.uniform(
-                    problem.constraint.lb, problem.constraint.ub)
+                solution = [np.random.uniform(low, high) for (low, high) in search_space]
+                score = self.func(solution)
 
-                # problem automatically tracks the current best search point
-                f = problem(x)
-
-            return problem.state.current_best
-
-        random_search(self.func, self.random_seed, self.total_budget)
+                # Aggiorna la migliore soluzione se necessario
+                if score < best_score:
+                    best_solution = solution
+                    best_score = score
+                print(best_score)
+            return best_solution, best_score
+        search_space = [(self.lb, self.ub) for _ in range(self.dim)]
+        budget = self.total_budget
+        random_search(self.func, search_space, budget)
 
 
 class linearPCABOWrapper:
@@ -667,14 +680,14 @@ def wrapopt(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_s
                              random_seed=random_seed)
 
 if __name__ == "__main__":
-    dim = 60
-    total_budget = 650
+    dim = 10
+    total_budget = 150
     doe_size = dim
     seed = 0
     # Algorithm alternatives:
-    algorithm_name = "pyCMA"
+    algorithm_name = "random"
 
-    f = get_problem(21, dimension=dim, instance=1, problem_type='Real')
+    f = get_problem(5, dimension=dim, instance=1, problem_type='Real')
 
     opt = wrapopt(algorithm_name, f, dim, total_budget, doe_size, seed)
     opt.run()
