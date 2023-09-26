@@ -370,6 +370,58 @@ class linearPCABOWrapper:
         return self.opt.cum_iteration_time
 
 
+class RDUCBWrapper:
+    def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
+        # import sys
+        # sys.path.append('./mylib/' + 'lib_' + "linearPCABO")
+        # print(sys.path)
+        import pathlib
+        my_dir = pathlib.Path(__file__).parent.resolve()
+        sys.path.append(os.path.join(my_dir, 'mylib', 'lib_RDUCB/HEBO/RDUCB'))
+        print(sys.path)
+        # sys.path.insert(0, bayes_bo_lib)
+        # print(sys.path)
+        self.func = func
+        self.dim = dim
+        self.ub = ub
+        self.lb = lb
+        self.total_budget = total_budget
+        self.Doe_size = DoE_size
+        self.random_seed = random_seed
+
+    def run(self):
+        # import sys
+        # sys.path.insert(0, "./mylib/lib_linearPCABO/Bayesian-Optimization")
+
+        from hdbo.algorithms import RDUCB
+        self.opt = RDUCB( algorithm_random_seed=1,
+    eps=-1,
+    exploration_weight= 'lambda t: 0.5 * np.log(2*t)',
+    graphSamplingNumIter=100,
+    learnDependencyStructureRate=1,
+    lengthscaleNumIter=2,
+    max_eval=-4,
+    noise_var= 0.1,
+    param_n_iter=16,
+    size_of_random_graph=0.2,
+    data_random_seed=self.random_seed,
+    fn_noise_var=0.15,
+    grid_size=150,
+    fn= self.func,
+n_iter=self.total_budget-self.Doe_size,
+n_rand=self.dim, dim=self.dim,)
+        self.opt.run()
+
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
+
+
 class turbo1Wrapper:
     def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
         #import sys
@@ -678,6 +730,9 @@ def wrapopt(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_s
     if optimizer_name == 'pyCMA':
         return Py_CMA_ES_Wrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget,
                              random_seed=random_seed)
+    if optimizer_name == 'RDUCB':
+        return RDUCBWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+                             random_seed=random_seed)
 
 if __name__ == "__main__":
     dim = 10
@@ -685,7 +740,7 @@ if __name__ == "__main__":
     doe_size = dim
     seed = 0
     # Algorithm alternatives:
-    algorithm_name = "random"
+    algorithm_name = "RDUCB"
 
     f = get_problem(5, dimension=dim, instance=1, problem_type='Real')
 
