@@ -409,17 +409,17 @@ class RDUCBWrapper:
     grid_size=150,
     fn= self.func,
 n_iter=self.total_budget-self.Doe_size,
-n_rand=self.dim, dim=self.dim,)
+n_rand=self.Doe_size, dim=self.dim,)
         self.opt.run()
 
     def get_acq_time(self):
-        return self.opt.acq_opt_time
+        return self.opt.mybo.acq_opt_time
 
     def get_mode_time(self):
-        return self.opt.mode_fit_time
+        return self.opt.mybo.mode_fit_time
 
     def get_iter_time(self):
-        return self.opt.cum_iteration_time
+        return self.opt.mybo.cum_iteration_time
 
 
 class turbo1Wrapper:
