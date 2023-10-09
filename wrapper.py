@@ -394,7 +394,7 @@ class RDUCBWrapper:
         # sys.path.insert(0, "./mylib/lib_linearPCABO/Bayesian-Optimization")
 
         from hdbo.algorithms import RDUCB
-        self.opt = RDUCB( algorithm_random_seed=1,
+        self.opt = RDUCB( algorithm_random_seed=self.random_seed,
     eps=-1,
     exploration_weight= 'lambda t: 0.5 * np.log(2*t)',
     graphSamplingNumIter=100,
@@ -404,7 +404,7 @@ class RDUCBWrapper:
     noise_var= 0.1,
     param_n_iter=16,
     size_of_random_graph=0.2,
-    data_random_seed=self.random_seed,
+    # data_random_seed=self.random_seed,
     fn_noise_var=0.15,
     grid_size=150,
     fn= self.func,
@@ -738,11 +738,11 @@ if __name__ == "__main__":
     dim = 10
     total_budget = 150
     doe_size = dim
-    seed = 0
+    seed = 2
     # Algorithm alternatives:
     algorithm_name = "RDUCB"
 
-    f = get_problem(5, dimension=dim, instance=1, problem_type='Real')
+    f = get_problem(1, dimension=dim, instance=1, problem_type='Real')
 
     opt = wrapopt(algorithm_name, f, dim, total_budget, doe_size, seed)
     opt.run()
