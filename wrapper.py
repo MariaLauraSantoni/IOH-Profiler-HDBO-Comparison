@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 import sys
 import os
@@ -784,20 +786,21 @@ class HEBOWrapper:
                            range(1, self.dim + 1)]
         space = DesignSpace().parse(dimension_specs)
         #space = DesignSpace().parse([{'name': 'x', 'type': 'int', 'lb': self.lb, 'ub': self.ub}])
-        opt = HEBO(space, rand_sample=self.Doe_size, scramble_seed=self.random_seed )
+        self.opt = HEBO(space, rand_sample=self.Doe_size, scramble_seed=self.random_seed )
         for i in range(self.total_budget):
-            rec = opt.suggest(n_suggestions=1)
-            opt.observe(rec, obj(rec))
-            print('After %d iterations, best obj is %.2f' % (i, opt.y.min()))
+            rec = self.opt.suggest(n_suggestions=1)
+            self.opt.observe(rec, obj(rec))
+            print('After %d iterations, best obj is %.2f' % (i, self.opt.y.min()))
+            self.opt.cum_iteration_time = time.process_time()
 
     def get_acq_time(self):
-        return self.opt.mybo.acq_opt_time
+        return self.opt.acq_opt_time
 
     def get_mode_time(self):
-        return self.opt.mybo.mode_fit_time
+        return self.opt.mode_fit_time
 
     def get_iter_time(self):
-        return self.opt.mybo.cum_iteration_time
+        return self.opt.cum_iteration_time
 
 
 
