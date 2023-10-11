@@ -689,6 +689,116 @@ class EBO_BWrapper:
     def get_iter_time(self):
         return self.opt.cum_iteration_time
 
+class ALEBOWrapper:
+    def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
+        # import sys
+        # sys.path.append('./mylib/' + 'lib_' + "linearPCABO")
+        # print(sys.path)
+        import pathlib
+        my_dir = pathlib.Path(__file__).parent.resolve()
+        sys.path.append(os.path.join(my_dir, 'mylib', 'lib_ALEBO/Ax/'))
+        # print(sys.path)
+        from ax.modelbridge.strategies.alebo import ALEBOStrategy
+        # sys.path.insert(0, bayes_bo_lib)
+        # print(sys.path)
+        self.func = func
+        self.dim = dim
+        self.ub = ub
+        self.lb = lb
+        self.total_budget = total_budget
+        self.Doe_size = DoE_size
+        self.random_seed = random_seed
+
+    def run(self):
+        # import sys
+        # sys.path.insert(0, "./mylib/lib_linearPCABO/Bayesian-Optimization")
+        parameters = [
+            {"name": "x0", "type": "range", "bounds": [self.lb, self.ub], "value_type": "float"},
+            {"name": "x1", "type": "range", "bounds": [self.lb, self.ub], "value_type": "float"},
+        ]
+        parameters.extend([
+            {"name": f"x{i}", "type": "range", "bounds": [self.lb, self.ub], "value_type": "float"}
+            for i in range(2, self.dim)
+        ])
+        alebo_strategy = ALEBOStrategy(D=self.dim, d=10, init_size=self.Doe_size)
+        from ax.service.managed_loop import optimize
+        self.opt = optimize(
+    parameters=parameters,
+    experiment_name="test",
+    objective_name="objective",
+    evaluation_function=self.func,
+    minimize=True,
+    total_trials=self.total_budget,
+    generation_strategy=alebo_strategy,
+)
+        self.opt()
+
+    def get_acq_time(self):
+        return self.opt.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.cum_iteration_time
+
+class HEBOWrapper:
+    def __init__(self, func, dim, ub, lb, total_budget, DoE_size, random_seed):
+        # import sys
+        # sys.path.append('./mylib/' + 'lib_' + "linearPCABO")
+        # print(sys.path)
+        # import pathlib
+        # my_dir = pathlib.Path(__file__).parent.resolve()
+        # sys.path.append(os.path.join(my_dir, 'mylib', 'lib_RDUCB/HEBO/RDUCB'))
+        # print(sys.path)
+        # sys.path.insert(0, bayes_bo_lib)
+        # print(sys.path)
+        self.func = func
+        self.dim = dim
+        self.ub = ub
+        self.lb = lb
+        self.total_budget = total_budget
+        self.Doe_size = DoE_size
+        self.random_seed = random_seed
+
+    def run(self):
+        # import sys
+        # sys.path.insert(0, "./mylib/lib_linearPCABO/Bayesian-Optimization")
+        import pandas as pd
+        import numpy as np
+        from hebo.design_space.design_space import DesignSpace
+        from hebo.optimizers.hebo import HEBO
+        # def obj(params: pd.DataFrame) -> np.ndarray:
+        #     return ((params.values - 0.37) ** 2).sum(axis=1).reshape(-1, 1)
+        def obj(params: pd.DataFrame) -> np.ndarray:
+            # Imposta la funzione BBOB desiderata (ad esempio, la funzione 1)
+            problem = self.func  # Parametri: dimensione, funzione BBOB (1-24)
+
+            # Calcola il valore della funzione obiettivo per ciascuna riga dei parametri
+            values = [problem(np.squeeze(row.values)) for _, row in params.iterrows()]
+
+            # Restituisci i valori come un array numpy
+            return np.array(values).reshape(-1, 1)
+
+        dimension_specs = [{"name": f"param{i}", "type": "num", 'lb' : self.lb, 'ub' : self.ub } for i in
+                           range(1, self.dim + 1)]
+        space = DesignSpace().parse(dimension_specs)
+        #space = DesignSpace().parse([{'name': 'x', 'type': 'int', 'lb': self.lb, 'ub': self.ub}])
+        opt = HEBO(space, rand_sample=self.Doe_size, scramble_seed=self.random_seed )
+        for i in range(self.total_budget):
+            rec = opt.suggest(n_suggestions=1)
+            opt.observe(rec, obj(rec))
+            print('After %d iterations, best obj is %.2f' % (i, opt.y.min()))
+
+    def get_acq_time(self):
+        return self.opt.mybo.acq_opt_time
+
+    def get_mode_time(self):
+        return self.opt.mybo.mode_fit_time
+
+    def get_iter_time(self):
+        return self.opt.mybo.cum_iteration_time
+
 
 
 def wrapopt(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_seed):
@@ -730,8 +840,15 @@ def wrapopt(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_s
     if optimizer_name == 'pyCMA':
         return Py_CMA_ES_Wrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget,
                              random_seed=random_seed)
+
     if optimizer_name == 'RDUCB':
         return RDUCBWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+                             random_seed=random_seed)
+    if optimizer_name == 'ALEBO':
+        return ALEBOWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
+                             random_seed=random_seed)
+    if optimizer_name == 'HEBO':
+        return HEBOWrapper(func=func, dim=ml_dim, ub=ub, lb=lb, total_budget=ml_total_budget, DoE_size=ml_DoE_size,
                              random_seed=random_seed)
 
 if __name__ == "__main__":
@@ -740,7 +857,7 @@ if __name__ == "__main__":
     doe_size = dim
     seed = 2
     # Algorithm alternatives:
-    algorithm_name = "RDUCB"
+    algorithm_name = "HEBO"
 
     f = get_problem(1, dimension=dim, instance=1, problem_type='Real')
 
