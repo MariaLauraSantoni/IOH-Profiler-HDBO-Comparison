@@ -696,11 +696,8 @@ class ALEBOWrapper:
         # import sys
         # sys.path.append('./mylib/' + 'lib_' + "linearPCABO")
         # print(sys.path)
-        import pathlib
-        my_dir = pathlib.Path(__file__).parent.resolve()
-        sys.path.append(os.path.join(my_dir, 'mylib', 'lib_ALEBO/Ax/'))
-        # print(sys.path)
-        from ax.modelbridge.strategies.alebo import ALEBOStrategy
+        
+        # from ax.modelbridge.strategies.alebo import ALEBOStrategy
         # sys.path.insert(0, bayes_bo_lib)
         # print(sys.path)
         self.func = func
@@ -710,10 +707,26 @@ class ALEBOWrapper:
         self.total_budget = total_budget
         self.Doe_size = DoE_size
         self.random_seed = random_seed
+        
 
     def run(self):
-        # import sys
-        # sys.path.insert(0, "./mylib/lib_linearPCABO/Bayesian-Optimization")
+        import pathlib
+        # my_dir = pathlib.Path(__file__).parent.resolve()
+        # sys.path.append(os.path.join(my_dir, 'mylib', 'lib_ALEBO'))
+        # import numpy as np
+        from ax.utils.measurement.synthetic_functions import branin
+        print(sys.path)
+        def branin_evaluation_function(parameterization):
+            # Evaluates Branin on the first two parameters of the parameterization.
+            # Other parameters are unused.
+            x = np.array([parameterization["x0"], parameterization["x1"]])
+            return {"objective": (branin(x), 0.0)}
+        def function(parameterization):
+            # Evaluates Branin on the first two parameters of the parameterization.
+            # Other parameters are unused.
+            x = np.array([parameterization[f'x{i}'] for i in range(self.dim)])
+            return {"objective": (self.func(x), 0.0)}
+        
         parameters = [
             {"name": "x0", "type": "range", "bounds": [self.lb, self.ub], "value_type": "float"},
             {"name": "x1", "type": "range", "bounds": [self.lb, self.ub], "value_type": "float"},
@@ -722,18 +735,42 @@ class ALEBOWrapper:
             {"name": f"x{i}", "type": "range", "bounds": [self.lb, self.ub], "value_type": "float"}
             for i in range(2, self.dim)
         ])
-        alebo_strategy = ALEBOStrategy(D=self.dim, d=10, init_size=self.Doe_size)
+        from ax.modelbridge.strategies.alebo import ALEBOStrategy
+        alebo_strategy = ALEBOStrategy(D=self.dim, d=4, init_size=self.Doe_size)
         from ax.service.managed_loop import optimize
         self.opt = optimize(
-    parameters=parameters,
-    experiment_name="test",
-    objective_name="objective",
-    evaluation_function=self.func,
-    minimize=True,
-    total_trials=self.total_budget,
-    generation_strategy=alebo_strategy,
-)
+        parameters=parameters,
+        experiment_name="test",
+        objective_name="objective",
+        evaluation_function=function,
+        minimize=True,
+        total_trials=self.total_budget,
+        generation_strategy=alebo_strategy,
+        )
         self.opt()
+#     def run(self):
+#         # import sys
+#         # sys.path.insert(0, "./mylib/lib_linearPCABO/Bayesian-Optimization")
+#         parameters = [
+#             {"name": "x0", "type": "range", "bounds": [self.lb, self.ub], "value_type": "float"},
+#             {"name": "x1", "type": "range", "bounds": [self.lb, self.ub], "value_type": "float"},
+#         ]
+#         parameters.extend([
+#             {"name": f"x{i}", "type": "range", "bounds": [self.lb, self.ub], "value_type": "float"}
+#             for i in range(2, self.dim)
+#         ])
+#         alebo_strategy = ALEBOStrategy(D=self.dim, d=10, init_size=self.Doe_size)
+#         from ax.service.managed_loop import optimize
+#         self.opt = optimize(
+#     parameters=parameters,
+#     experiment_name="test",
+#     objective_name="objective",
+#     evaluation_function=self.func,
+#     minimize=True,
+#     total_trials=self.total_budget,
+#     generation_strategy=alebo_strategy,
+# )
+#         self.opt()
 
     def get_acq_time(self):
         return self.opt.acq_opt_time
@@ -860,8 +897,7 @@ if __name__ == "__main__":
     doe_size = dim
     seed = 2
     # Algorithm alternatives:
-    algorithm_name = "HEBO"
-
+    algorithm_name = "ALEBO"
     f = get_problem(1, dimension=dim, instance=1, problem_type='Real')
 
     opt = wrapopt(algorithm_name, f, dim, total_budget, doe_size, seed)
