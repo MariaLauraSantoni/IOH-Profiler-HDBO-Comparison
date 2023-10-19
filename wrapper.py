@@ -707,7 +707,7 @@ class ALEBOWrapper:
         self.total_budget = total_budget
         self.Doe_size = DoE_size
         self.random_seed = random_seed
-        
+        self.iter = 0
 
     def run(self):
         # import pathlib
@@ -716,15 +716,21 @@ class ALEBOWrapper:
         # import numpy as np
         from ax.utils.measurement.synthetic_functions import branin
         print(sys.path)
+        
         def branin_evaluation_function(parameterization):
             # Evaluates Branin on the first two parameters of the parameterization.
             # Other parameters are unused.
             x = np.array([parameterization["x0"], parameterization["x1"]])
+
             return {"objective": (branin(x), 0.0)}
         def function(parameterization):
             # Evaluates Branin on the first two parameters of the parameterization.
             # Other parameters are unused.
             x = np.array([parameterization[f'x{i}'] for i in range(self.dim)])
+            self.iter+=1
+            if self.iter == self.total_budget:
+                print("Optimization is complete, cannot run another trial.")
+                exit()
             return {"objective": (self.func(x), 0.0)}
         
         parameters = [
@@ -894,7 +900,7 @@ def wrapopt(optimizer_name, func, ml_dim, ml_total_budget, ml_DoE_size, random_s
 
 if __name__ == "__main__":
     dim = 10
-    total_budget = 150
+    total_budget = 30
     doe_size = dim
     seed = 2
     # Algorithm alternatives:
