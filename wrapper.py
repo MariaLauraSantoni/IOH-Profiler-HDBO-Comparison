@@ -710,7 +710,7 @@ class ALEBOWrapper:
         
 
     def run(self):
-        import pathlib
+        # import pathlib
         # my_dir = pathlib.Path(__file__).parent.resolve()
         # sys.path.append(os.path.join(my_dir, 'mylib', 'lib_ALEBO'))
         # import numpy as np
@@ -737,6 +737,7 @@ class ALEBOWrapper:
         ])
         from ax.modelbridge.strategies.alebo import ALEBOStrategy
         alebo_strategy = ALEBOStrategy(D=self.dim, d=4, init_size=self.Doe_size)
+        alebo_strategy._steps[0].model_kwargs.update({"seed": self.random_seed})
         from ax.service.managed_loop import optimize
         self.opt = optimize(
         parameters=parameters,
