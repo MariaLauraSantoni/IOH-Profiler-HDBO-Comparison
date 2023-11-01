@@ -4,15 +4,16 @@ This repository contains the code used to generate the results in the paper Comp
 It proposes a modular algorithm framework to make the implementation of several algorithms compared within the paper compatible
 via [IOHprofiler](https://iohprofiler.github.io/), and appropriate code to store all the data obtained.
 The selected algorithms are: 
-- Vanilla Bayesian Optimization, taken from the Python module [scikit-learn](https://scikit-optimize.github.io/stable/auto_examples/bayesian-optimization.html).
+- Vanilla Bayesian Optimization, taken from the Python module [scikit-optimize](https://scikit-optimize.github.io/stable/auto_examples/bayesian-optimization.html).
 - CMA-ES from the [pycma](https://github.com/CMA-ES/pycma) package.
+- Random search, taken from the Python module numpy using the method [random.uniform](https://numpy.org/doc/stable/reference/random/generated/numpy.random.uniform.html).
 - SAASBO algorithm from [High-Dimensional Bayesian Optimization with Sparse Axis-Aligned Subspaces](https://arxiv.org/pdf/2103.00349.pdf).
-- EBO introduced in [Batched Large-scale Bayesian Optimization in High-dimensional Spaces](https://arxiv.org/pdf/1706.01445.pdf).
+- RDUCB introduced in [Are Random Decompositions all we need in High Dimensional Bayesian Optimisation?](https://arxiv.org/abs/2301.12844).
 - PCA-BO proposed in [High Dimensional Bayesian Optimization Assisted by Principal Component Analysis](https://arxiv.org/pdf/2007.00925.pdf).
 - KPCA-BO introduced in [High Dimensional Bayesian Optimization with Kernel Principal Component Analysis](https://arxiv.org/pdf/2204.13753.pdf).
 - TuRBO from [Scalable Global Optimization via Local Bayesian Optimization](https://proceedings.neurips.cc/paper/2019/file/6c990b7aca7bc7058f5e98ea909e924b-Paper.pdf).
 
-This code compares these approaches on the 24 functions of the Black-Box Optimization Benchmarking (BBOB) suite from the [COCO](https://arxiv.org/pdf/1603.08785.pdf) benchmarking environment suite using their definition from [IOHprofiler](https://iohprofiler.github.io/). It is based on the original repositories and modules of the selected algorithms [vanilla Bayesian Optimization](https://scikit-optimize.github.io/stable/auto_examples/bayesian-optimization.html), [CMA-ES](https://github.com/CMA-ES/pycma), [SAASBO](https://github.com/martinjankowiak/saasbo), [EBO](https://github.com/zi-w/Ensemble-Bayesian-Optimization), [PCA-BO](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO), [KPCA-BO](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) and [TuRBO](https://github.com/uber-research/TuRBO). We provide all the Python files to run the paper experiments and to store results in data files.
+This code compares these approaches on the 24 functions of the Black-Box Optimization Benchmarking (BBOB) suite from the [COCO](https://arxiv.org/pdf/1603.08785.pdf) benchmarking environment suite using their definition from [IOHprofiler](https://iohprofiler.github.io/). It is based on the original repositories and modules of the selected algorithms [vanilla Bayesian Optimization](https://scikit-optimize.github.io/stable/auto_examples/bayesian-optimization.html), [CMA-ES](https://github.com/CMA-ES/pycma), [random search](https://numpy.org/doc/stable/reference/random/generated/numpy.random.uniform.html), [SAASBO](https://github.com/martinjankowiak/saasbo), [RDUCB](https://github.com/huawei-noah/HEBO/tree/master/RDUCB), [PCA-BO](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO), [KPCA-BO](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) and [TuRBO](https://github.com/uber-research/TuRBO). We provide all the Python files to run the paper experiments and to store results in data files.
 
 # Libraries and dependencies
 
@@ -26,7 +27,8 @@ The implementation of all tasks and algorithms to perform experiments are in Pyt
 - `gen_config.py` generates a folder called `config` containing files to run each algorithm with the parameters chosen in `total_config.json` given as an input and a bash script to run experiments with a Slurm job scheduler.
 - `mylib` contains one folder for each algorithm with all the classes and functions needed to run them.
 - `Bayesian-Optimization.zip` contains the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
-- `sksparse.zip` contains the module sksparse with little changes to track the CPU time for the algorithm EBO.
+- `RDUCB` contains the cloned repository [RDUCB](https://github.com/huawei-noah/HEBO/tree/master/RDUCB) with little changes to track the CPU time for the algorithm RDUCB.
+- `Gpy.zip` and `GpyOpt.zip` contain the modules Gpy and GpyOpt, respectively, with little changes to track the CPU time for the algorithm RDUCB.
 - `skopt.zip` contains the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
 - `requirements.txt` contains the list of all the project’s dependencies with the specific version of each dependency.
 
