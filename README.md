@@ -27,7 +27,7 @@ The implementation of all tasks and algorithms to perform experiments are in Pyt
 - `gen_config.py` generates a folder called `config` containing files to run each algorithm with the parameters chosen in `total_config.json` given as an input and a bash script to run experiments with a Slurm job scheduler.
 - `mylib` contains one folder for each algorithm with all the classes and functions needed to run them.
 - `Bayesian-Optimization.zip` contains the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
-- `RDUCB` contains the cloned repository [RDUCB](https://github.com/huawei-noah/HEBO/tree/master/RDUCB) with little changes to track the CPU time for the algorithm RDUCB.
+- `RDUCB.zip` contains the cloned repository [RDUCB](https://github.com/huawei-noah/HEBO/tree/master/RDUCB) with little changes to track the CPU time for the algorithm RDUCB.
 - `Gpy.zip` and `GpyOpt.zip` contain the modules Gpy and GpyOpt, respectively, with little changes to track the CPU time for the algorithm RDUCB.
 - `skopt.zip` contains the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
 - `requirements.txt` contains the list of all the project’s dependencies with the specific version of each dependency.
@@ -44,29 +44,33 @@ pip install -r requirements.txt
 ## Specific modules to copy for tracking the CPU time in the log file
 To correctly track the CPU time this project needs some modified modules and a modified cloned repository. Follow the steps below:
 
-1. Unzip the folders `skopt.zip`, `sksparse.zip` and `Bayesian-Optimization.zip`:
+1. Unzip the folders `skopt.zip`, `Bayesian-Optimization.zip`, `Gpy.zip`, `GpyOpt.zip` and `RDUCB.zip`:
 ```
 unzip skopt.zip
-unzip sksparse.zip
 unzip Bayesian-Optimization.zip
+unzip Gpy.zip
+unzip GpyOpt.zip
+unzip RDUCB.zip
 ```
 2. Find the path of the used Python site-packages directory:
 ```
 python -m site
 ```
-3. Move `skopt` and `sksparse` to the used Python site-packages directory:
+3. Move `skopt`, `Gpy` and `GpyOPt` to the used Python site-packages directory:
 ```
 mv skopt "found_path_site_packages"
-mv sksparse "found_path_site_packages"
+mv Gpy "found_path_site_packages"
+mv GpyOPt "found_path_site_packages"
 ```
-4. Move `Bayesian-Optimization` to the right library inside the project:
+4. Move `Bayesian-Optimization` and `RDUCB` to the right libraries inside the project:
 ```
 mv Bayesian-Optimization mylib/lib_BO_bayesoptim
+mv Bayesian-Optimization mylib/lib_RDUCB/HEBO
 ```
 ## Run from source
 First of all, the parameters of the experiment need to be decided in the file `total_config.json`: 
 - `folder` is the first part of the name of the folders that will contain all the result data from the experiment. The number of the folders for each function indicated in `fiids` that will be generated to store the results are indicated in `reps`.
-- `optimizers` is the name of the algorithm used during the experiment. It can be chosen among `BO_sklearn`, `pyCMA`, `saasbo`, `EBO`, `EBO_B`, `linearPCABO`, `KPCABO`, `turbo1` and `turbom`.
+- `optimizers` is the name of the algorithm used during the experiment. It can be chosen among `BO_sklearn`, `pyCMA`, `random`, `saasbo`, `RDUCB`, `linearPCABO`, `KPCABO`, `turbo1` and `turbom`.
 - `fiids` defines which functions the algorithm has to optimize. It can be a single number or multiple numbers separated by a comma in the range of the 24 BBOB functions.
 - `iids` is the number of the problem instance, in the paper 0, 1, and 2 are performed.
 - `dims` is the dimension of the problem.
