@@ -92,7 +92,7 @@ python gen_config.py total_config.json
 then, move to the folder `run_current_date_and_time` typing the first half of the last command line that will appear as screen output (the part before &&).
 A single run with a specific number of seeds (till reps-1) can be executed using the following command:
 ```
-python ../run_experiment.py config/number_of_seeds.json
+python ../run_experiment.py configs/number_of_seeds.json
 ```
 ## Analysis from source
 Reps-folders for each function indicated in `fiids` with the first part of the name stored in `folder` inside the file `total_config.json` will be generated inside the folder `run_current_date_and_time`. Each of them contains a folder `data_number_and_name_of_the_function` that stores a `.dat` file with all the results about the loss and the different CPU times tracked (the loss examined in the paper is stored under the name `best-so-far f(x)`).
