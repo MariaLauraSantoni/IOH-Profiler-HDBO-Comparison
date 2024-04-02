@@ -56,7 +56,7 @@ unzip RDUCB.zip
 ```
 python -m site
 ```
-3. Move `skopt`, `Gpy` and `GpyOPt` to the used Python site-packages directory:
+3. Move `skopt`, `GPy` and `GPyOPt` to the used Python site-packages directory:
 ```
 mv skopt "found_path_site_packages"
 mv Gpy "found_path_site_packages"
