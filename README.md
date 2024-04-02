@@ -48,8 +48,8 @@ To correctly track the CPU time this project needs some modified modules and a m
 ```
 unzip skopt.zip
 unzip Bayesian-Optimization.zip
-unzip Gpy.zip
-unzip GpyOpt.zip
+unzip GPy.zip
+unzip GPyOpt.zip
 unzip RDUCB.zip
 ```
 2. Find the path of the used Python site-packages directory:
