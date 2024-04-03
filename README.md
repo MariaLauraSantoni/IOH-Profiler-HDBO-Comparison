@@ -26,6 +26,7 @@ The implementation of all tasks and algorithms to perform experiments are in Pyt
 - `total_config.json` allows defining the settings of the experiment and it has to be the argument of the file `gen_config.py`. 
 - `gen_config.py` generates a folder called `config` containing files to run each algorithm with the parameters chosen in `total_config.json` given as an input and a bash script to run experiments with a Slurm job scheduler.
 - `mylib` contains one folder for each algorithm with all the classes and functions needed to run them.
+- `bayes_optim.zip` contains the module bayes-optim with little changes to track the CPU time for the algorithm CMA-ES.
 - `Bayesian-Optimization.zip` contains the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
 - `RDUCB.zip` contains the cloned repository [RDUCB](https://github.com/huawei-noah/HEBO/tree/master/RDUCB) with little changes to track the CPU time for the algorithm RDUCB.
 - `Gpy.zip` and `GpyOpt.zip` contain the modules Gpy and GpyOpt, respectively, with little changes to track the CPU time for the algorithm RDUCB.
@@ -35,7 +36,7 @@ The implementation of all tasks and algorithms to perform experiments are in Pyt
 # Execution from source
 ## Dependencies to run from source
 
-Running this code from source requires Python 3.7.4, and the libraries given in `requirements.txt` (Warning: preferably use a virtual environment for this specific project, to avoid breaking the dependencies of your other projects). In Ubuntu, installing the dependencies can be done using the following command:
+Running this code from source requires Python 3.10.12, and the libraries given in `requirements.txt` (Warning: preferably use a virtual environment for this specific project, to avoid breaking the dependencies of your other projects). In Ubuntu, installing the dependencies can be done using the following command:
 
 ```
 pip install -r requirements.txt
@@ -44,8 +45,9 @@ pip install -r requirements.txt
 ## Specific modules to copy for tracking the CPU time in the log file
 To correctly track the CPU time this project needs some modified modules and a modified cloned repository. Follow the steps below:
 
-1. Unzip the folders `skopt.zip`, `Bayesian-Optimization.zip`, `Gpy.zip`, `GpyOpt.zip` and `RDUCB.zip`:
+1. Unzip the folders `bayes_optim.zip`, `skopt.zip`, `Bayesian-Optimization.zip`, `Gpy.zip`, `GpyOpt.zip` and `RDUCB.zip`:
 ```
+unzip bayes_optim.zip
 unzip skopt.zip
 unzip Bayesian-Optimization.zip
 unzip GPy.zip
@@ -56,11 +58,12 @@ unzip RDUCB.zip
 ```
 python -m site
 ```
-3. Move `skopt`, `GPy` and `GPyOPt` to the used Python site-packages directory:
+3. Move `bayes_optim`, `skopt`, `GPy` and `GPyOPt` to the used Python site-packages directory:
 ```
+mv bayes_optim "found_path_site_packages"
 mv skopt "found_path_site_packages"
-mv Gpy "found_path_site_packages"
-mv GpyOPt "found_path_site_packages"
+mv GPy "found_path_site_packages"
+mv GPyOPt "found_path_site_packages"
 ```
 4. Move `Bayesian-Optimization` and `RDUCB` to the right libraries inside the project:
 ```
@@ -74,18 +77,18 @@ First of all, the parameters of the experiment need to be decided in the file `t
 - `fiids` defines which functions the algorithm has to optimize. It can be a single number or multiple numbers separated by a comma in the range of the 24 BBOB functions.
 - `iids` is the number of the problem instance, in the paper 0, 1, and 2 are performed.
 - `dims` is the dimension of the problem.
-- `reps` is the number of run repetitions with the same settings (optimizer, function id, instance id, etc.). Different repetitions differ only for the seed. Inside the folder containing the results, a `config` folder will be generated containing `reps` .json files, one for each repetition. The number at the beginning of the `.json` file represents the seed number for that specific repetition, starting from 0 (ex. 0.json stores the settings for running an experiment using seed 0). 
+- `reps` is the number of run repetitions with the same settings (optimizer, function id, instance id, etc.). Different repetitions differ only for the seed. Inside the folder containing the results, a `configs` folder will be generated containing `reps` .json files, one for each repetition. The number at the beginning of the `.json` file represents the seed number for that specific repetition, starting from 0 (ex. 0.json stores the settings for running an experiment using seed 0). 
 - `lb` and `ub` are the lower bound and the upper bound of the design domain. In the paper, they are fixed as -5 and 5, respectively.
 - `extra` contains extra text information to store in the result folder.
 ### Execute repetitions in parallel using a cluster
 If a job scheduling system for Linux clusters is available, the batch script can be edited inside the file `gen_config.py`. 
-After choosing the parameters and editing the batch script, a folder called `run_current_date_and_time` containing folders with the result data and the `config` folder will be generated using the following command:
+After choosing the parameters and editing the batch script, a folder called `run_current_date_and_time` containing folders with the result data and the `configs` folder will be generated using the following command:
 ```
 python gen_config.py total_config.json
 ```
 and the jobs can be launched by typing the last command line that will appear as screen output.
 ### Execute a single run
-Here, there is no need to adjust the settings to generate the batch script editing the file `gen_config.py`. Therefore, after choosing the parameters the folder called `run_current_date_and_time` containing the folders with the result data, and the `config` folder will be generated using the following command:
+If a job scheduling system is not available or there is no need to submit a job because only a single run is asked the following steps can be done. Here, there is no need to adjust the settings to generate the batch script editing the file `gen_config.py`. Therefore, after choosing the parameters the folder called `run_current_date_and_time` containing the folders with the result data, and the `configs` folder will be generated using the following command:
 ```
 python gen_config.py total_config.json
 ```
