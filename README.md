@@ -29,7 +29,7 @@ The implementation of all tasks and algorithms to perform experiments are in Pyt
 - `bayes_optim.zip` contains the module bayes-optim with little changes to track the CPU time for the algorithm CMA-ES.
 - `Bayesian-Optimization.zip` contains the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with little changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
 - `RDUCB.zip` contains the cloned repository [RDUCB](https://github.com/huawei-noah/HEBO/tree/master/RDUCB) with little changes to track the CPU time for the algorithm RDUCB.
-- `Gpy.zip` and `GpyOpt.zip` contain the modules Gpy and GpyOpt, respectively, with little changes to track the CPU time for the algorithm RDUCB.
+- `GPy.zip` and `GPyOpt.zip` contain the modules Gpy and GpyOpt, respectively, with little changes to track the CPU time for the algorithm RDUCB.
 - `skopt.zip` contains the module skopt with little changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
 - `requirements.txt` contains the list of all the project’s dependencies with the specific version of each dependency.
 
@@ -45,7 +45,7 @@ pip install -r requirements.txt
 ## Specific modules to copy for tracking the CPU time in the log file
 To correctly track the CPU time this project needs some modified modules and a modified cloned repository. Follow the steps below:
 
-1. Unzip the folders `bayes_optim.zip`, `skopt.zip`, `Bayesian-Optimization.zip`, `Gpy.zip`, `GpyOpt.zip` and `RDUCB.zip`:
+1. Unzip the folders `bayes_optim.zip`, `skopt.zip`, `Bayesian-Optimization.zip`, `GPy.zip`, `GPyOpt.zip` and `RDUCB.zip`:
 ```
 unzip bayes_optim.zip
 unzip skopt.zip
