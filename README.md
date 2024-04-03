@@ -60,10 +60,10 @@ python -m site
 ```
 3. Move `bayes_optim`, `skopt`, `GPy` and `GPyOPt` to the used Python site-packages directory:
 ```
-mv bayes_optim "found_path_site_packages"
-mv skopt "found_path_site_packages"
-mv GPy "found_path_site_packages"
-mv GPyOPt "found_path_site_packages"
+mv bayes_optim <found_path_site_packages>
+mv skopt <found_path_site_packages>
+mv GPy <found_path_site_packages>
+mv GPyOPt <found_path_site_packages>
 ```
 4. Move `Bayesian-Optimization` and `RDUCB` to the right libraries inside the project:
 ```
