@@ -77,9 +77,10 @@ First of all, the parameters of the experiment need to be decided in the file `t
 - `fiids` defines which functions the algorithm has to optimize. It can be a single number or multiple numbers separated by a comma in the range of the 24 BBOB functions.
 - `iids` is the number of the problem instance, in the paper 0, 1, and 2 are performed.
 - `dims` is the dimension of the problem.
-- `reps` is the number of run repetitions with the same settings (optimizer, function id, instance id, etc.). Different repetitions differ only for the seed. Inside the folder containing the results, a `configs` folder will be generated containing `reps` .json files, one for each repetition. The number at the beginning of the `.json` file represents the seed number for that specific repetition, starting from 0 (ex. 0.json stores the settings for running an experiment using seed 0). 
+- `reps` is the number of run repetitions with the same settings (optimizer, function id, instance id, etc.). Different repetitions differ only for the seed. Inside the folder containing the results, a `configs` folder will be generated containing `reps` .json files, one for each repetition. The seed number for repetitions starts from 0. 
 - `lb` and `ub` are the lower bound and the upper bound of the design domain. In the paper, they are fixed as -5 and 5, respectively.
 - `extra` contains extra text information to store in the result folder.
+The `configs` folder will contain the file .json for all the possible combinations of settings present in all the lists configured in `total_config.json` repeated `reps` times (changing the number of seeds from 0 to `reps`-1). The name of the file .json describes the specific setting: Optimizer (Opt), function (F), instance (Id), Dimension (Dim), Repetition/number of seeds -1 (Rep), and number of the experiment (NumExp) (ex. Opt-turbo1_F-1_Id-0_Dim-10_Rep-0_NumExp-0.json).
 ### Execute repetitions in parallel using a cluster
 If a job scheduling system for Linux clusters is available, the batch script can be edited inside the file `gen_config.py`. 
 After choosing the parameters and editing the batch script, a folder called `run_current_date_and_time` containing folders with the result data and the `configs` folder will be generated using the following command:
@@ -92,10 +93,10 @@ If a job scheduling system is not available or there is no need to submit a job 
 ```
 python gen_config.py total_config.json
 ```
-then, move to the folder `run_current_date_and_time` typing the first half of the last command line that will appear as screen output (the part before &&).
-A single run with a specific number of seeds (till reps-1) can be executed using the following command:
+then, move to the folder `run_current_date_and_time` typing the last command line that will appear as screen output.
+A single run with specific settings can be executed using the following command:
 ```
-python ../run_experiment.py configs/number_of_seeds.json
+python ../run_experiment.py configs/settings_you_want_to_run.json
 ```
 ## Analysis from source
 Reps-folders for each function indicated in `fiids` with the first part of the name stored in `folder` inside the file `total_config.json` will be generated inside the folder `run_current_date_and_time`. Each of them contains a folder `data_number_and_name_of_the_function` that stores a `.dat` file with all the results about the loss and the different CPU times tracked (the loss examined in the paper is stored under the name `best-so-far f(x)`).
