@@ -81,6 +81,7 @@ First of all, the parameters of the experiment need to be decided in the file `t
 - `reps` is the number of run repetitions with the same settings (optimizer, function id, instance id, etc.). Different repetitions differ only for the seed. Inside the folder containing the results, a `configs` folder will be generated containing `reps` .json files, one for each repetition. The seed number for repetitions starts from 0. 
 - `lb` and `ub` are the lower bound and the upper bound of the design domain. In the paper, they are fixed as -5 and 5, respectively.
 - `extra` contains extra text information to store in the result folder.
+  
 The `configs` folder will contain the file .json for all the possible combinations of settings present in all the lists configured in `total_config.json` repeated `reps` times (changing the number of seeds from 0 to `reps`-1). The name of the file .json describes the specific setting: Optimizer (Opt), function (F), instance (Id), Dimension (Dim), Repetition/number of seeds -1 (Rep), and number of the experiment (NumExp) (ex. Opt-turbo1_F-1_Id-0_Dim-10_Rep-0_NumExp-0.json).
 ### Execute repetitions in parallel using a cluster
 If a job scheduling system for Linux clusters is available, the batch script can be edited inside the file `gen_config.py`. 
