@@ -904,7 +904,7 @@ if __name__ == "__main__":
     doe_size = dim
     seed = 2
     # Algorithm alternatives:
-    algorithm_name = "ALEBO"
+    algorithm_name = "turbo1"
     f = get_problem(1, dimension=dim, instance=1, problem_type='Real')
 
     opt = wrapopt(algorithm_name, f, dim, total_budget, doe_size, seed)

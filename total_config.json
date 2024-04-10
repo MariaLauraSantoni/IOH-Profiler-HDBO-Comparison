@@ -1,10 +1,10 @@
 {
-    "folder": "testbosk",
-    "optimizers": ["BO_sklearn"],
-    "fids": [20, 21],
-    "iids": [0],
-    "dims": [10],
-    "reps": 1,
+    "folder": "test",
+    "optimizers": ["turbo1", "turbom"],
+    "fids": [1, 2],
+    "iids": [0, 1],
+    "dims": [10, 20],
+    "reps": 2,
     "lb": -5,
     "ub": 5,
     "extra": "Tests"

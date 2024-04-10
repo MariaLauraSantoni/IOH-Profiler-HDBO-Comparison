@@ -2,7 +2,7 @@ import sys
 import os
 import json
 import datetime
-
+import subprocess
 
 class ExperimentEnvironment:
     SLURM_SCRIPT_TEMPLATE = '''#!/bin/bash
@@ -22,7 +22,7 @@ class ExperimentEnvironment:
 
 num=##from_number##
 FILE_ID=$((${SLURM_ARRAY_TASK_ID}+$num))
-python ../run_experiment.py configs/${FILE_ID}.json
+python ../run_experiment.py configs/*${FILE_ID}.json
 '''
 
     def __init__(self):
@@ -95,7 +95,7 @@ python ../run_experiment.py configs/${FILE_ID}.json
                         # print(f'Ids for opt={my_optimizer_name}, fid={fid}, iid={iid}, dim={dim} are [{cur_config_number}, {cur_config_number+reps-1}]')
                         for rep in range(reps):
                             experiment_config = {
-                                    'folder': f'{self.result_folder_prefix}_Opt-{my_optimizer_name}_F-{fid}_Dim-{dim}_Rep-{rep}_Id-{cur_config_number}',
+                                    'folder': f'{self.result_folder_prefix}_Opt-{my_optimizer_name}_F-{fid}_Id-{iid}_Dim-{dim}_Rep-{rep}_NumExp-{cur_config_number}',
                                     'opt': my_optimizer_name,
                                     'fid': fid,
                                     'iid': iid,
@@ -104,15 +104,26 @@ python ../run_experiment.py configs/${FILE_ID}.json
                                     'lb': lb,
                                     'ub': ub,
                                     }
-                            cur_config_file_name = f'{cur_config_number}.json'
+                            cur_config_file_name = f'Opt-{my_optimizer_name}_F-{fid}_Id-{iid}_Dim-{dim}_Rep-{rep}_NumExp-{cur_config_number}.json'
                             with open(os.path.join(configs_dir, cur_config_file_name), 'w') as f:
                                 json.dump(experiment_config, f)
                             cur_config_number += 1
         print(f'Generated {cur_config_number} files')
         self.generated_configs = cur_config_number
+    def is_slurm_available(self):
+        try:
+            subprocess.run(["sbatch", "--version"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            return True
+        except FileNotFoundError:
+            return False
 
     def print_helper(self):
-        print(f'cd {self.experiment_root} && for (( i=0; i<{self.__number_of_slurm_scripts}; ++i )); do sbatch slurm$i.sh; done')
+        if self.is_slurm_available():
+            print(f'cd {self.experiment_root} && for (( i=0; i<{self.__number_of_slurm_scripts}; ++i )); do sbatch slurm$i.sh; done')
+        else:
+            print(f'cd {self.experiment_root}')
+    #def print_helper(self):
+    #    print(f'cd {self.experiment_root} && for (( i=0; i<{self.__number_of_slurm_scripts}; ++i )); do sbatch slurm$i.sh; done')
 
 
 def main(argv):
