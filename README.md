@@ -72,26 +72,29 @@ mv Bayesian-Optimization mylib/lib_BO_bayesoptim
 mv RDUCB mylib/lib_RDUCB/HEBO
 ```
 ## Run from source
-First of all, the parameters of the experiment need to be decided in the file `total_config.json`: 
-- `folder` is the first part of the name of the folders that will contain all the result data from the experiment. The number of the folders for each function indicated in `fiids` that will be generated to store the results are indicated in `reps`.
-- `optimizers` is the name of the algorithm used during the experiment. It can be chosen among `BO_sklearn`, `pyCMA`, `random`, `saasbo`, `RDUCB`, `linearPCABO`, `KPCABO`, `turbo1` and `turbom`.
-- `fiids` defines which functions the algorithm has to optimize. It can be a single number or multiple numbers separated by a comma in the range of the 24 BBOB functions.
-- `iids` is the number of the problem instance, in the paper 0, 1, and 2 are performed.
-- `dims` is the dimension of the problem.
-- `reps` is the number of run repetitions with the same settings (optimizer, function id, instance id, etc.). Different repetitions differ only for the seed. Inside the folder containing the results, a `configs` folder will be generated containing `reps` .json files, one for each repetition. The seed number for repetitions starts from 0. 
-- `lb` and `ub` are the lower bound and the upper bound of the design domain. In the paper, they are fixed as -5 and 5, respectively.
+First of all, use the file `total_config.json` to decide the settings of your experiment: 
+- `folder` is the prefix of the folders that are generated to store the results from the experiment. 
+- `optimizers` is a list of as many strings as the number of algorithms that will be tested in the experiment. Possible names for the algorithms are `BO_sklearn`, `pyCMA`, `random`, `saasbo`, `RDUCB`, `linearPCABO`, `KPCABO`, `turbo1` and `turbom`.
+- `fiids` is a list of functions to be optimized. The list can contain a single number or multiple integers identifying the 24 BBOB functions.
+- `iids` is a list of problem instance. In our paper, 0, 1, and 2 are considered.
+- `dims` is a list of problem dimensions tested within the experiment.
+- `reps` is the number of run repetitions that will be performed under the same settings (optimizer, function id, instance id, etc.). Different repetitions differ only for different seeds. The seed number for repetitions starts from 0. 
+- `lb` and `ub` are the lower and the upper bounds of the search space along each dimension. In the paper, they are fixed as -5 and 5, respectively.
 - `extra` contains extra text information to store in the result folder.
-  
-The `configs` folder will contain the file .json for all the possible combinations of settings present in all the lists configured in `total_config.json` repeated `reps` times (changing the number of seeds from 0 to `reps`-1). The name of the file .json describes the specific setting: Optimizer (Opt), function (F), instance (Id), Dimension (Dim), Repetition/number of seeds -1 (Rep), and number of the experiment (NumExp) (ex. Opt-turbo1_F-1_Id-0_Dim-10_Rep-0_NumExp-0.json).
+
+Results will be generated inside a `run_current_date_and_time` folder. This contains a `configs` subfolder storing as many .json files as the total number of different settings defined by all the combinations of parameters in `total_config.json`. The name of each .json file describes the specific setting: optimizer (Opt), function (F), instance (Id), dimension (Dim), repetition (Rep), and a numerical experiment identifier utilized to denote the tested settings in ascending order (NumExp). For example, `Opt-turbo1_F-1_Id-0_Dim-10_Rep-0_NumExp-0.json`. 
+
+
 ### Execute repetitions in parallel using a cluster
 If a job scheduling system for Linux clusters is available, the batch script can be edited inside the file `gen_config.py`. 
-After choosing the parameters and editing the batch script, a folder called `run_current_date_and_time` containing folders with the result data and the `configs` folder will be generated using the following command:
+After choosing the parameters and editing the batch script, a folder `run_current_date_and_time` containing the `configs` folder will be generated using the following command:
 ```
 python gen_config.py total_config.json
 ```
-and the jobs can be launched by typing the last command line that will appear as screen output.
+and the jobs can be launched by typing the last command line that will appear as screen output. At this point, also the folders containing the results will be generated inside `run_current_date_and_time`.
+
 ### Execute a single run
-If a job scheduling system is not available or there is no need to submit a job because only a single run is asked the following steps can be done. Here, there is no need to adjust the settings to generate the batch script editing the file `gen_config.py`. Therefore, after choosing the parameters the folder called `run_current_date_and_time` containing the folders with the result data, and the `configs` folder will be generated using the following command:
+If a job scheduling system is not available or there is no need to submit a job because only a single run is asked the following steps can be done. Here, there is no need to adjust the settings to generate the batch script editing the file `gen_config.py`. Therefore, after choosing the parameters the folder called `run_current_date_and_time` containing the `configs` folder will be generated using the following command:
 ```
 python gen_config.py total_config.json
 ```
@@ -100,7 +103,6 @@ A single run with specific settings can be executed using the following command:
 ```
 python ../run_experiment.py configs/settings_you_want_to_run.json
 ```
+and the folder containing the results will be generted inside `run_current_date_and_time`.
 ## Analysis from source
 Reps-folders for each function indicated in `fiids` with the first part of the name stored in `folder` inside the file `total_config.json` will be generated inside the folder `run_current_date_and_time`. Each of them contains a folder `data_number_and_name_of_the_function` that stores a `.dat` file with all the results about the loss and the different CPU times tracked (the loss examined in the paper is stored under the name `best-so-far f(x)`).
-
-
