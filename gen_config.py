@@ -120,10 +120,6 @@ python ../run_experiment.py configs/*${FILE_ID}.json
     def print_helper(self):
         if self.is_slurm_available():
             print(f'cd {self.experiment_root} && for (( i=0; i<{self.__number_of_slurm_scripts}; ++i )); do sbatch slurm$i.sh; done')
-        else:
-            print(f'cd {self.experiment_root}')
-    #def print_helper(self):
-    #    print(f'cd {self.experiment_root} && for (( i=0; i<{self.__number_of_slurm_scripts}; ++i )); do sbatch slurm$i.sh; done')
 
 
 def main(argv):
