@@ -92,17 +92,17 @@ Use the command
 ```
 python gen_config.py total_config.json
 ```
-to generate a folder `run_[current_date_and_time]` containing the `configs` subfolder described above. Moreover, the same command generates an output to screen. Copy-paste the printed line (for example, `[path-to-root-folder]/run_15-04-2024_16h14m59s && for (( i=0; i<1; ++i )); do sbatch slurm$i.sh; done`) in your terminal window to start as many jobs as the setting combinations specified in `total_config.json`. At this point, the folders containing the results are generated inside `run_[current_date_and_time]`.
+to generate a folder `run_[current_date_and_time]` containing the `configs` subfolder described above. Moreover, the same command generates an output to screen. Copy-paste the printed line (for example, `cd [path-to-root-folder]/run_15-04-2024_16h14m59s && for (( i=0; i<1; ++i )); do sbatch slurm$i.sh; done`) in your terminal window to start as many jobs as the setting combinations specified in `total_config.json`. At this point, the folders containing the results are generated inside `run_[current_date_and_time]`.
 
 ### Execute single runs
 If a job scheduling system is not available or not necessary, the following steps must be followed. In this case, there is no need to adjust the settings to generate the batch script by editing the file `gen_config.py`. Again, after defining the experimental setup in `total_config.json`, run the command 
 ```
 python gen_config.py total_config.json
 ```
-to generate the folder `run_[current_date_and_time]` containing the `configs` subfolder described above. The command generates an output to screen. Copy-paste the printed line (for example, `[path-to-root-folder]/run_15-04-2024_16h14m59s) in your terminal window to move to the right directory.
-A single run with specific settings can be started using the following command:
+to generate the folder `run_[current_date_and_time]` containing the `configs` subfolder described above. The command also prints to screen the experiment root folder `run_[current_date_and_time]` and how many files were generated, i.e., how many different settings are considered.
+A single run for a specific setting can be started using the following command:
 ```
-python ../run_experiment.py configs/[settings_you_want_to_run].json
+python run_experiment.py run_[current_date_and_time]/configs/[setting_you_want_to_run].json
 ```
 and the folder containing the results is generated inside `run_[current_date_and_time]`.
 
