@@ -82,7 +82,7 @@ First of all, use the file `total_config.json` to decide the settings of your ex
 - `lb` and `ub` are the lower and the upper bounds of the search space along each dimension. In the paper, they are fixed as -5 and 5, respectively.
 - `extra` contains extra text information to store in the result folder.
 
-Results will be generated inside a `run_current_date_and_time` folder. This contains a `configs` subfolder storing as many .json files as the total number of different settings defined by all the combinations of parameters in `total_config.json`. The name of each .json file describes the specific setting: optimizer (Opt), function (F), instance (Id), dimension (Dim), repetition (Rep), and a numerical experiment identifier utilized to denote the tested settings in ascending order (NumExp). For example, `Opt-turbo1_F-1_Id-0_Dim-10_Rep-0_NumExp-0.json`. 
+Results will be generated inside a `run_[current_date_and_time]` folder. This contains a `configs` subfolder storing as many .json files as the total number of different settings defined by all the combinations of parameters in `total_config.json`. The name of each .json file describes the specific setting: optimizer (Opt), function (F), instance (Id), dimension (Dim), repetition (Rep), and a numerical experiment identifier utilized to denote the tested settings in ascending order (NumExp). For example, `Opt-turbo1_F-1_Id-0_Dim-10_Rep-0_NumExp-0.json`. 
 
 
 ### Execute parallel jobs using a cluster
