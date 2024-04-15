@@ -92,7 +92,7 @@ Use the command
 ```
 python gen_config.py total_config.json
 ```
-to generate a folder `run_[current_date_and_time]` containing the `configs` subfolder described above. Moreover, the same command generates an output to screen. Capy-paste the generated line (for example, `[path-to-root-folder]/run_15-04-2024_16h14m59s && for (( i=0; i<1; ++i )); do sbatch slurm$i.sh; done`) in your terminal window to start as many jobs as the setting combinations specified in `total_config.json`. At this point, the folders containing the results are generated inside `run_current_date_and_time`.
+to generate a folder `run_[current_date_and_time]` containing the `configs` subfolder described above. Moreover, the same command generates an output to screen. Capy-paste the printed line (for example, `[path-to-root-folder]/run_15-04-2024_16h14m59s && for (( i=0; i<1; ++i )); do sbatch slurm$i.sh; done`) in your terminal window to start as many jobs as the setting combinations specified in `total_config.json`. At this point, the folders containing the results are generated inside `run_current_date_and_time`.
 
 ### Execute single runs
 If a job scheduling system is not available or not necessary, the following steps must be followed. In this case, there is no need to adjust the settings to generate the batch script by editing the file `gen_config.py`. Again, after defining the experimental setup in `total_config.json`, run the command 
