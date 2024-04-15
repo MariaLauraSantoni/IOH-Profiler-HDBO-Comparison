@@ -27,7 +27,7 @@ The implementation is in Python 3.10.12 and all the libraries used are listed in
 - `total_config.json` allows the user to define the settings of an experiment. It is taken as an argument by the file `gen_config.py`. 
 - `gen_config.py` generates a folder called `configs` containing files to run experiments based on the settings defined in `total_config.json`. 
 - `mylib` stores the libraries with the implementation of the compared algorithms.
-- `bayes_optim.zip` contains the bayes-optim package, with slight modifications to track the CPU time fofr CMA-ES.
+- `bayes_optim.zip` contains the bayes-optim package, with slight modifications to track the CPU time for CMA-ES.
 - `Bayesian-Optimization.zip` contains the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with some changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
 - `RDUCB.zip` contains the cloned repository [RDUCB](https://github.com/huawei-noah/HEBO/tree/master/RDUCB) with modifications to track the CPU time for the algorithm RDUCB.
 - `GPy.zip` and `GPyOpt.zip` contains the modules Gpy and GpyOpt, respectively, with modifications to track the CPU time for the algorithm RDUCB.
