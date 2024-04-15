@@ -30,7 +30,7 @@ The implementation is in Python 3.10.12 and all the libraries used are listed in
 - `bayes_optim.zip` contains the bayes-optim package, with slight modifications to track the CPU time for CMA-ES.
 - `Bayesian-Optimization.zip` contains the cloned repository [Bayesian-Optimization](https://github.com/wangronin/Bayesian-Optimization/tree/KPCA-BO) with some changes to track the CPU time for the algorithms PCA-BO and KPCA-BO.
 - `RDUCB.zip` contains the cloned repository [RDUCB](https://github.com/huawei-noah/HEBO/tree/master/RDUCB) with modifications to track the CPU time for the algorithm RDUCB.
-- `GPy.zip` and `GPyOpt.zip` contains the modules Gpy and GpyOpt, respectively, with modifications to track the CPU time for the algorithm RDUCB.
+- `GPy.zip` and `GPyOpt.zip` contain the modules Gpy and GpyOpt, respectively, with modifications to track the CPU time for the algorithm RDUCB.
 - `skopt.zip` contains the module skopt with some changes to track the CPU time for the algorithm vanilla Bayesian Optimization.
 - `requirements.txt` contains the list of all the project’s dependencies with the specific version of each dependency.
 
@@ -76,7 +76,7 @@ First of all, use the file `total_config.json` to decide the settings of your ex
 - `folder` is the prefix of the folders that are generated to store the results from the experiment. 
 - `optimizers` is a list of as many strings as the number of algorithms that will be tested in the experiment. Possible names for the algorithms are `BO_sklearn`, `pyCMA`, `random`, `saasbo`, `RDUCB`, `linearPCABO`, `KPCABO`, `turbo1` and `turbom`.
 - `fiids` is a list of functions to be optimized. The list can contain a single number or multiple integers identifying the 24 BBOB functions.
-- `iids` is a list of problem instance. In our paper, 0, 1, and 2 are considered.
+- `iids` is a list of problem instances. In our paper, 0, 1, and 2 are considered.
 - `dims` is a list of problem dimensions tested within the experiment.
 - `reps` is the number of run repetitions that will be performed under the same settings (optimizer, function id, instance id, etc.). Different repetitions differ only for different seeds. The seed number for repetitions starts from 0. 
 - `lb` and `ub` are the lower and the upper bounds of the search space along each dimension. In the paper, they are fixed as -5 and 5, respectively.
@@ -86,13 +86,13 @@ Results will be generated inside a `run_current_date_and_time` folder. This cont
 
 
 ### Execute parallel jobs using a cluster
-If a job scheduling system for Linux clusters is available, the batch script to be edited is inside `gen_config.py`. Choosing the parametrs in this file and script editing must be done before launching any jobs.
+If a job scheduling system for Linux clusters is available, the batch script to be edited is inside `gen_config.py`. Choosing the parameters in this file and script editing must be done before launching any jobs.
 
 Use the command
 ```
 python gen_config.py total_config.json
 ```
-to generate a folder `run_[current_date_and_time]` containing the `configs` subfolder described above. Moreover, the same command generates an output to screen. Capy-paste the printed line (for example, `[path-to-root-folder]/run_15-04-2024_16h14m59s && for (( i=0; i<1; ++i )); do sbatch slurm$i.sh; done`) in your terminal window to start as many jobs as the setting combinations specified in `total_config.json`. At this point, the folders containing the results are generated inside `run_current_date_and_time`.
+to generate a folder `run_[current_date_and_time]` containing the `configs` subfolder described above. Moreover, the same command generates an output to screen. Capy-paste the printed line (for example, `[path-to-root-folder]/run_15-04-2024_16h14m59s && for (( i=0; i<1; ++i )); do sbatch slurm$i.sh; done`) in your terminal window to start as many jobs as the setting combinations specified in `total_config.json`. At this point, the folders containing the results are generated inside `run_[current_date_and_time]`.
 
 ### Execute single runs
 If a job scheduling system is not available or not necessary, the following steps must be followed. In this case, there is no need to adjust the settings to generate the batch script by editing the file `gen_config.py`. Again, after defining the experimental setup in `total_config.json`, run the command 
