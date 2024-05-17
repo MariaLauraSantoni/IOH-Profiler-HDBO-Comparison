@@ -116,7 +116,7 @@ Follow the steps below:
 docker build --network=host . -t hdbo-docker
 docker run -it hdbo-docker bash
 ```
-3. After this, you can perform the normal commands to run a single run:
+3. After this, perform the normal commands to run a single run:
 ```
 python gen_config.py total_config.json
 python run_experiment.py run_[current_date_and_time]/configs/[setting_you_want_to_run].json
