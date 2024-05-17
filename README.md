@@ -110,7 +110,7 @@ and the folder containing the results is generated inside `run_[current_date_and
 To simplify the process of setting up and running the application, you can use Docker. The provided Dockerfile will create a consistent environment, ensuring that the application runs smoothly regardless of the host system.
 Follow the steps below:
 
-1. Install Docker on your system.
+1. Install Docker on the system.
 2. Build the Docker Image and run the Docker Container executing the following commands:
 ```
 docker build --network=host . -t hdbo-docker
